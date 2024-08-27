@@ -31,10 +31,10 @@ This document outlines the database schema and relationships for the PadelHubAPI
   * `id`: Primary Key, UUID
   * `username`: String
   * `contact_phone`: String
-  * `email`: String
+  * `contact_email`: String
   * `password`: String
   * `role`: String (ADMIN, CLUB_MANAGER, PLAYER)
-  * `create_at`: Timestamp
+  * `created_at`: Timestamp
   * `updated_at`: Timestamp
     <br/><br/>
 
@@ -51,7 +51,7 @@ This document outlines the database schema and relationships for the PadelHubAPI
   * `address`: String
   * `contact_email`: String
   * `contact_phone`: String
-  * `create_at`: Timestamp
+  * `created_at`: Timestamp
   * `updated_at`: Timestamp
     <br/><br/>
 
@@ -67,7 +67,7 @@ This document outlines the database schema and relationships for the PadelHubAPI
   * `surface`: String (Concrete, Cement, Wood, Synthetic Material or Artificial turf)
   * `court_environment`: String (Indoor, Outdoor)
   * `club_id`: Foreign Key, UUID
-  * `create_at`: Timestamp
+  * `created_at`: Timestamp
   * `updated_at`: Timestamp
     <br/><br/>
 
@@ -85,7 +85,7 @@ This document outlines the database schema and relationships for the PadelHubAPI
   * `reservation_start_time`: Timestamp
   * `reservation_end_time`: Timestamp
   * `status`: String (Pending, Confirmed, Cancelled)
-  * `create_at`: Timestamp
+  * `created_at`: Timestamp
   * `updated_at`: Timestamp
     <br/><br/>
 
