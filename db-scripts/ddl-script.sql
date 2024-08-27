@@ -1,9 +1,10 @@
 BEGIN;
 
-    CREATE TABLE IF NOT EXISTS public."user"
+    CREATE TABLE IF NOT EXISTS public.users
     (
         id bigserial NOT NULL,
         username character varying NOT NULL,
+        password character varying NOT NULL,
         contact_email character varying NOT NULL,
         contact_phone character varying,
         role character varying NOT NULL,
@@ -58,7 +59,7 @@ BEGIN;
 
     ALTER TABLE IF EXISTS public.reservation
         ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id)
-        REFERENCES public."user" (id) MATCH SIMPLE
+        REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION;
     CREATE INDEX IF NOT EXISTS fki_fk_user_id
