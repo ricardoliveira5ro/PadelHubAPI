@@ -1,0 +1,102 @@
+package com.ricardo.oliveira.padelHubAPI.model;
+
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "reservation")
+public class Reservation {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
+    @Column(name = "reservation_start_time")
+    private LocalDateTime reservationStartTime;
+
+    @Column(name = "reservation_end_time")
+    private LocalDateTime reservationEndTime;
+
+    @Column(name = "status")
+    private String status;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinColumn(name = "court_id")
+    private Court court;
+
+    // TODO: created_at
+
+    // TODO: updated_at
+
+    public Reservation() {}
+
+    public Reservation(LocalDateTime reservationStartTime, LocalDateTime reservationEndTime, String status) {
+        this.reservationStartTime = reservationStartTime;
+        this.reservationEndTime = reservationEndTime;
+        this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getReservationStartTime() {
+        return reservationStartTime;
+    }
+
+    public void setReservationStartTime(LocalDateTime reservationStartTime) {
+        this.reservationStartTime = reservationStartTime;
+    }
+
+    public LocalDateTime getReservationEndTime() {
+        return reservationEndTime;
+    }
+
+    public void setReservationEndTime(LocalDateTime reservationEndTime) {
+        this.reservationEndTime = reservationEndTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Court getCourt() {
+        return court;
+    }
+
+    public void setCourt(Court court) {
+        this.court = court;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", reservationStartTime=" + reservationStartTime +
+                ", reservationEndTime=" + reservationEndTime +
+                ", status='" + status + '\'' +
+                '}';
+    }
+}
