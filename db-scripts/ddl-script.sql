@@ -33,6 +33,8 @@ BEGIN;
         surface character varying,
         court_environment character varying NOT NULL,
         club_id bigint,
+        created_at timestamp without time zone NOT NULL,
+        updated_at timestamp without time zone NOT NULL,
         CONSTRAINT court_pk PRIMARY KEY (id)
     );
 
