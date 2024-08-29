@@ -1,5 +1,6 @@
 package com.ricardo.oliveira.padelHubAPI.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class User {
     private String role;
 
     @OneToMany(
-        mappedBy = "users",
+        mappedBy = "user",
         fetch = FetchType.LAZY,
         cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH }
     )
