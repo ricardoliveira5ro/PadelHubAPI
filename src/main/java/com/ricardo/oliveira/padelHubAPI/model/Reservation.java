@@ -1,6 +1,10 @@
 package com.ricardo.oliveira.padelHubAPI.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -14,25 +18,34 @@ public class Reservation {
     private int id;
 
     @Column(name = "reservation_start_time")
+    @NotBlank
     private LocalDateTime reservationStartTime;
 
     @Column(name = "reservation_end_time")
+    @NotBlank
     private LocalDateTime reservationEndTime;
 
     @Column(name = "status")
+    @NotBlank
     private String status;
 
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JoinColumn(name = "court_id")
+    @NotNull
     private Court court;
 
-    // TODO: created_at
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    // TODO: updated_at
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public Reservation() {}
 
@@ -88,6 +101,22 @@ public class Reservation {
 
     public void setCourt(Court court) {
         this.court = court;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override

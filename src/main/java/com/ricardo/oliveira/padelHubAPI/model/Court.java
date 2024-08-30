@@ -1,7 +1,12 @@
 package com.ricardo.oliveira.padelHubAPI.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,15 +20,19 @@ public class Court {
     private int id;
 
     @Column(name = "name")
+    @NotBlank
     private String name;
 
     @Column(name = "surface")
+    @NotBlank
     private String surface;
 
     @Column(name = "court_environment")
+    @NotBlank
     private String courtEnvironment;
 
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @NotNull
     @JoinColumn(name = "club_id")
     private Club club;
 
@@ -34,9 +43,13 @@ public class Court {
     )
     private List<Reservation> reservations;
 
-    // TODO: created_at
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    // TODO: updated_at
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public Court() {}
 
@@ -101,6 +114,22 @@ public class Court {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override

@@ -12,6 +12,8 @@ public class ReservationDTO {
     private String status;
     private int userId;
     private int courtId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public ReservationDTO() {}
 
@@ -22,6 +24,8 @@ public class ReservationDTO {
         this.status = reservation.getStatus();
         this.userId = reservation.getUser().getId();
         this.courtId = reservation.getCourt().getId();
+        this.createdAt = reservation.getCreatedAt();
+        this.updatedAt = reservation.getUpdatedAt();
     }
 
     public int getId() {
@@ -46,5 +50,13 @@ public class ReservationDTO {
 
     public int getCourtId() {
         return courtId;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }
