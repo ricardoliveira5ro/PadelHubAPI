@@ -36,47 +36,23 @@ public class CourtDTO {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getSurface() {
         return surface;
     }
 
-    public void setSurface(String surface) {
-        this.surface = surface;
-    }
-
     public String getCourtEnvironment() {
         return courtEnvironment;
-    }
-
-    public void setCourtEnvironment(String courtEnvironment) {
-        this.courtEnvironment = courtEnvironment;
     }
 
     public int getClubId() {
         return clubId;
     }
 
-    public void setClubId(int clubId) {
-        this.clubId = clubId;
-    }
-
     public List<ReservationDTO> getReservations() {
         return reservations;
-    }
-
-    public void setReservations(List<ReservationDTO> reservations) {
-        this.reservations = reservations;
     }
 }
