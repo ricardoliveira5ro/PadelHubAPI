@@ -1,13 +1,16 @@
 package com.ricardo.oliveira.padelHubAPI.controller;
 
+import com.ricardo.oliveira.padelHubAPI.dto.ClubDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.service.ClubService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,18 +25,26 @@ public class ClubController {
     }
 
     @GetMapping("/")
-    public List<Club> findAll() {
-        return clubService.findAll();
+    public ResponseEntity<List<ClubDTO>> findAll() {
+        List<Club> clubs = clubService.findAll();
+        List<ClubDTO> clubDTOS = new ArrayList<>();
+
+        for (Club club : clubs) {
+            clubDTOS.add(new ClubDTO(club));
+        }
+
+        return ResponseEntity.ok(clubDTOS);
     }
 
     @GetMapping("/{clubId}")
-    public Club findById(@PathVariable int clubId) {
+    public ResponseEntity<ClubDTO> findById(@PathVariable int clubId) {
         Club club = clubService.findById(clubId);
 
         if (club == null) {
             throw new RuntimeException("Club id not found - " + clubId);
         }
 
-        return club;
+        ClubDTO clubDTO = new ClubDTO(club);
+        return ResponseEntity.ok(clubDTO);
     }
 }
