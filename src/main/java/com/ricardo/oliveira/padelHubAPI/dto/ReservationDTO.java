@@ -28,47 +28,23 @@ public class ReservationDTO {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public LocalDateTime getReservationStartTime() {
         return reservationStartTime;
-    }
-
-    public void setReservationStartTime(LocalDateTime reservationStartTime) {
-        this.reservationStartTime = reservationStartTime;
     }
 
     public LocalDateTime getReservationEndTime() {
         return reservationEndTime;
     }
 
-    public void setReservationEndTime(LocalDateTime reservationEndTime) {
-        this.reservationEndTime = reservationEndTime;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public int getCourtId() {
         return courtId;
-    }
-
-    public void setCourtId(int courtId) {
-        this.courtId = courtId;
     }
 }
