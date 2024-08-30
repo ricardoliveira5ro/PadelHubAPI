@@ -3,6 +3,7 @@ package com.ricardo.oliveira.padelHubAPI.dto;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class ClubDTO {
     private String contactEmail;
     private String contactPhone;
     private List<CourtDTO> courts = new ArrayList<>();
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public ClubDTO() {}
 
@@ -26,6 +29,8 @@ public class ClubDTO {
         this.contactEmail = club.getContactEmail();
         this.contactPhone = club.getContactPhone();
         convertCourtsToDTO(club.getCourts());
+        this.createdAt = club.getCreatedAt();
+        this.updatedAt = club.getUpdatedAt();
     }
 
     private void convertCourtsToDTO(List<Court> tmpCourts) {
@@ -60,5 +65,13 @@ public class ClubDTO {
 
     public List<CourtDTO> getCourts() {
         return courts;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }
