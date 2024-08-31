@@ -9,4 +9,6 @@ public interface ClubService {
     List<Club> findAll();
 
     Club findById(Integer id);
+
+    Club save(Club club);
 }

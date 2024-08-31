@@ -11,21 +11,21 @@ import java.util.Optional;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    private ReservationRepository ReservationRepository;
+    private ReservationRepository reservationRepository;
 
     @Autowired
     public ReservationServiceImpl(ReservationRepository userRepository) {
-        this.ReservationRepository = userRepository;
+        this.reservationRepository = userRepository;
     }
 
     @Override
     public List<Reservation> findAll() {
-        return ReservationRepository.findAll();
+        return reservationRepository.findAll();
     }
 
     @Override
     public Reservation findById(Integer id) {
-        Optional<Reservation> result = ReservationRepository.findById(id);
+        Optional<Reservation> result = reservationRepository.findById(id);
 
         Reservation reservation;
 
@@ -37,5 +37,10 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         return reservation;
+    }
+
+    @Override
+    public Reservation save(Reservation reservation) {
+        return reservationRepository.save(reservation);
     }
 }

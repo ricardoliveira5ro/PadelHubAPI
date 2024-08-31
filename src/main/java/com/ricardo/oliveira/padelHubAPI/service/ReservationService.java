@@ -9,4 +9,6 @@ public interface ReservationService {
     List<Reservation> findAll();
 
     Reservation findById(Integer id);
+
+    Reservation save(Reservation reservation);
 }

@@ -8,4 +8,6 @@ public interface CourtService {
     List<Court> findAll();
 
     Court findById(Integer id);
+
+    Court save(Court court);
 }
