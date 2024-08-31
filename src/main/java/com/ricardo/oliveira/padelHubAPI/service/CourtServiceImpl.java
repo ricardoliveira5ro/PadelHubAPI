@@ -38,4 +38,9 @@ public class CourtServiceImpl implements CourtService {
 
         return court;
     }
+
+    @Override
+    public Court save(Court court) {
+        return courtRepository.save(court);
+    }
 }
