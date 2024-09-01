@@ -1,5 +1,7 @@
 package com.ricardo.oliveira.padelHubAPI.controller;
 
+import com.ricardo.oliveira.padelHubAPI.dto.LoginDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.LoginResponse;
 import com.ricardo.oliveira.padelHubAPI.dto.RegisterDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.UserDTO;
 import com.ricardo.oliveira.padelHubAPI.model.User;
@@ -54,5 +56,14 @@ public class UserController {
         User user = userService.signup(registerDTO);
 
         return ResponseEntity.ok(new UserDTO(user));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginDTO loginDTO) {
+        User user = userService.authenticate(loginDTO);
+
+        String token = jwtService.generateToken(user);
+
+        return ResponseEntity.ok(new LoginResponse(user.getUsername(), token, jwtService.getExpirationTime()));
     }
 }
