@@ -32,8 +32,10 @@ public class CourtDTO {
     }
 
     private void convertReservationsToDTO(List<Reservation> tmpReservations) {
-        for (Reservation reservation : tmpReservations) {
-            this.reservations.add(new ReservationDTO(reservation));
+        if (tmpReservations != null) {
+            for (Reservation reservation : tmpReservations) {
+                this.reservations.add(new ReservationDTO(reservation));
+            }
         }
     }
 
