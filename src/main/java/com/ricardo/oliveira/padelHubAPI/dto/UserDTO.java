@@ -23,7 +23,7 @@ public class UserDTO {
     public UserDTO(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
-        this.contactEmail = user.getContactPhone();
+        this.contactEmail = user.getContactEmail();
         this.contactPhone = user.getContactPhone();
         this.role = user.getRole();
         convertReservationsToDTO(user.getReservations());
@@ -32,8 +32,10 @@ public class UserDTO {
     }
 
     private void convertReservationsToDTO(List<Reservation> tmpReservations) {
-        for (Reservation reservation : tmpReservations) {
-            this.reservations.add(new ReservationDTO(reservation));
+        if (tmpReservations != null) {
+            for (Reservation reservation : tmpReservations) {
+                this.reservations.add(new ReservationDTO(reservation));
+            }
         }
     }
 

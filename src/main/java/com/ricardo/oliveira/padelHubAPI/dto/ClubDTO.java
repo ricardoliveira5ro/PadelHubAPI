@@ -34,8 +34,10 @@ public class ClubDTO {
     }
 
     private void convertCourtsToDTO(List<Court> tmpCourts) {
-        for (Court court : tmpCourts) {
-            this.courts.add(new CourtDTO(court));
+        if (tmpCourts != null) {
+            for (Court court : tmpCourts) {
+                this.courts.add(new CourtDTO(court));
+            }
         }
     }
 
