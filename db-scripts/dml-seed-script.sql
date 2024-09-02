@@ -1,9 +1,9 @@
 BEGIN;
 
-    INSERT INTO users (username, password, contact_email, contact_phone, role, created_at, updated_at)
+    INSERT INTO users (first_name, last_name, password, contact_email, contact_phone, role, created_at, updated_at)
     VALUES
-    ('john_doe', 'password123', 'john@example.com', '123-456-7890', 'ROLE_USER', NOW(), NOW()),
-    ('jane_doe', 'password456', 'jane@example.com', '098-765-4321', 'ROLE_ADMIN', NOW(), NOW());
+    ('John', 'Doe', 'password123', 'john@example.com', '123-456-7890', 'USER', NOW(), NOW()),
+    ('Jane', 'Doe', 'password456', 'jane@example.com', '098-765-4321', 'ADMIN', NOW(), NOW());
 
 
     INSERT INTO club (name, description, address, contact_email, contact_phone, created_at, updated_at)

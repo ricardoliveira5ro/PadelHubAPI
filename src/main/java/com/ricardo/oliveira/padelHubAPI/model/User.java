@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username", "contact_email" }) })
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "contact_email" }) })
 public class User implements UserDetails {
 
     @Id
@@ -21,9 +21,13 @@ public class User implements UserDetails {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "username")
+    @Column(name = "first_name")
     @NotBlank
-    private String username;
+    private String firstName;
+
+    @Column(name = "last_name")
+    @NotBlank
+    private String lastName;
 
     @Column(name = "password")
     @NotBlank
@@ -57,8 +61,9 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String username, String password, String contactEmail, String contactPhone, String role) {
-        this.username = username;
+    public User(String firstName, String lastName, String password, String contactEmail, String contactPhone, String role) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
         this.contactEmail = contactEmail;
         this.contactPhone = contactPhone;
@@ -82,12 +87,20 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getUsername() {
-        return contactEmail;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPassword() {
@@ -147,6 +160,11 @@ public class User implements UserDetails {
     }
 
     @Override
+    public String getUsername() {
+        return contactEmail;
+    }
+
+    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -174,12 +192,13 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", contactEmail='" + contactEmail + '\'' +
+                "role='" + role + '\'' +
                 ", contactPhone='" + contactPhone + '\'' +
-                ", role='" + role + '\'' +
+                ", contactEmail='" + contactEmail + '\'' +
+                ", password='" + password + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", id=" + id +
                 '}';
     }
 }
