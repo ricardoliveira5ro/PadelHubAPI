@@ -56,9 +56,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User signup(RegisterDTO registerDTO) {
         User user = new User(
-                registerDTO.getUsername(),
+                registerDTO.getFirstName(),
+                registerDTO.getLastName(),
                 passwordEncoder.encode(registerDTO.getPassword()),
-                registerDTO.getContactEmail(),
+                registerDTO.getEmail(),
                 registerDTO.getContactPhone(),
                 registerDTO.getRole()
         );

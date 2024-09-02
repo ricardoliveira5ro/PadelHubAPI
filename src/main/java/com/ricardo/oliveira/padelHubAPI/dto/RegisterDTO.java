@@ -3,8 +3,9 @@ package com.ricardo.oliveira.padelHubAPI.dto;
 public class RegisterDTO {
 
     private String password;
-    private String username;
-    private String contactEmail;
+    private String firstName;
+    private String lastName;
+    private String email;
     private String contactPhone;
     private String role;
 
@@ -16,20 +17,28 @@ public class RegisterDTO {
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getContactEmail() {
-        return contactEmail;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setContactEmail(String email) {
+        this.email = email;
     }
 
     public String getContactPhone() {
