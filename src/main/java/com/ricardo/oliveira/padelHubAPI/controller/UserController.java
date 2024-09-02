@@ -9,10 +9,9 @@ import com.ricardo.oliveira.padelHubAPI.service.JwtService;
 import com.ricardo.oliveira.padelHubAPI.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -27,16 +26,12 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<UserDTO>> findAll() {
-        List<User> users = userService.findAll();
-        List<UserDTO> userDTOS = new ArrayList<>();
+    @GetMapping("/current-user")
+    public ResponseEntity<UserDTO> authenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
 
-        for (User user : users) {
-            userDTOS.add(new UserDTO(user));
-        }
-
-        return ResponseEntity.ok(userDTOS);
+        return ResponseEntity.ok(new UserDTO(user));
     }
 
     @GetMapping("/{userId}")

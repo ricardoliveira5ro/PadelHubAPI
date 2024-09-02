@@ -42,7 +42,7 @@ public class User implements UserDetails {
 
     @OneToMany(
         mappedBy = "user",
-        fetch = FetchType.LAZY,
+        fetch = FetchType.EAGER,
         cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH }
     )
     private List<Reservation> reservations;
@@ -83,7 +83,7 @@ public class User implements UserDetails {
     }
 
     public String getUsername() {
-        return username;
+        return contactEmail;
     }
 
     public void setUsername(String username) {
