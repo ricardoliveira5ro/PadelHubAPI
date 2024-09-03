@@ -2,9 +2,9 @@ package com.ricardo.oliveira.padelHubAPI.dto;
 
 public class LoginResponse {
 
-    private String username;
-    private String token;
-    private long expiresIn;
+    private final String username;
+    private final String token;
+    private final long expiresIn;
 
     public LoginResponse(String username, String token, long expiresIn) {
         this.username = username;

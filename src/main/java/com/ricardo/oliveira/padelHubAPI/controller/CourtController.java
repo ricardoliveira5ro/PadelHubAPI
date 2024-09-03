@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/courts")
 public class CourtController {
 
-    private CourtService courtService;
+    private final CourtService courtService;
 
     @Autowired
     public CourtController(CourtService courtService) {

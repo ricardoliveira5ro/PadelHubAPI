@@ -14,7 +14,7 @@ public class CourtDTO {
     private String surface;
     private String courtEnvironment;
     private int clubId;
-    private List<ReservationDTO> reservations = new ArrayList<>();
+    private final List<ReservationDTO> reservations = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

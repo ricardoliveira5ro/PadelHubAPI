@@ -1,6 +1,5 @@
 package com.ricardo.oliveira.padelHubAPI.service;
 
-import com.ricardo.oliveira.padelHubAPI.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class CourtServiceImpl implements CourtService {
 
-    private CourtRepository courtRepository;
+    private final CourtRepository courtRepository;
 
     @Autowired
     public CourtServiceImpl(CourtRepository courtRepository) {

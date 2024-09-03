@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class ClubServiceImpl implements ClubService {
 
-    private ClubRepository clubRepository;
+    private final ClubRepository clubRepository;
 
     @Autowired
     public ClubServiceImpl(ClubRepository userRepository) {
