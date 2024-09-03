@@ -4,6 +4,7 @@ import com.ricardo.oliveira.padelHubAPI.dto.LoginDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.LoginResponse;
 import com.ricardo.oliveira.padelHubAPI.dto.RegisterDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.UserDTO;
+import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.service.JwtService;
 import com.ricardo.oliveira.padelHubAPI.service.UserService;
@@ -28,26 +29,15 @@ public class UserController {
 
     @GetMapping("/current-user")
     public ResponseEntity<UserDTO> authenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-
-        return ResponseEntity.ok(new UserDTO(user));
-    }
-
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> findById(@PathVariable int userId) {
-        User user = userService.findById(userId);
-
-        if (user == null) {
-            throw new RuntimeException("Employee id not found - " + userId);
-        }
-
-        UserDTO userDTO = new UserDTO(user);
-        return ResponseEntity.ok(userDTO);
+        return ResponseEntity.ok(new UserDTO(getCurrentUser()));
     }
 
     @PostMapping("/signup")
     public ResponseEntity<UserDTO> register(@RequestBody RegisterDTO registerDTO) {
+        if (registerDTO.getClub() != null && getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RuntimeException("You are authenticated as a " + registerDTO.getRole() + " user. " +
+                                        "Only " + Role.CLUB_OWNER.getValue() + " users can register a new club");
+
         User user = userService.signup(registerDTO);
 
         return ResponseEntity.ok(new UserDTO(user));
@@ -60,5 +50,11 @@ public class UserController {
         String token = jwtService.generateToken(user);
 
         return ResponseEntity.ok(new LoginResponse(user.getUsername(), token, jwtService.getExpirationTime()));
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return (User) authentication.getPrincipal();
     }
 }

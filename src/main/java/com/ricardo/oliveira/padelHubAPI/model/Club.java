@@ -1,5 +1,6 @@
 package com.ricardo.oliveira.padelHubAPI.model;
 
+import com.ricardo.oliveira.padelHubAPI.dto.RegisterClubDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;

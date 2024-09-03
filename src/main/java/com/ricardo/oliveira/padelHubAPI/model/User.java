@@ -46,6 +46,10 @@ public class User implements UserDetails {
     @NotNull
     private Role role;
 
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinColumn(name = "club_id")
+    private Club club;
+
     @OneToMany(
         mappedBy = "user",
         fetch = FetchType.EAGER,
@@ -135,6 +139,14 @@ public class User implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Club getClub() {
+        return club;
+    }
+
+    public void setClub(Club club) {
+        this.club = club;
     }
 
     public List<Reservation> getReservations() {
