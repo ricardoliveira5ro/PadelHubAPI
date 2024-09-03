@@ -2,6 +2,7 @@ package com.ricardo.oliveira.padelHubAPI.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,9 +41,10 @@ public class User implements UserDetails {
     @Column(name = "contact_phone")
     private String contactPhone;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    @NotBlank
-    private String role;
+    @NotNull
+    private Role role;
 
     @OneToMany(
         mappedBy = "user",
@@ -61,7 +63,7 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String firstName, String lastName, String password, String contactEmail, String contactPhone, String role) {
+    public User(String firstName, String lastName, String password, String contactEmail, String contactPhone, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
@@ -127,11 +129,11 @@ public class User implements UserDetails {
         this.contactPhone = contactPhone;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
