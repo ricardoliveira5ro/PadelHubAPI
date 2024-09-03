@@ -1,6 +1,7 @@
 package com.ricardo.oliveira.padelHubAPI.dto;
 
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
+import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ public class UserDTO {
     private String username;
     private String contactEmail;
     private String contactPhone;
-    private String role;
+    private Role role;
     private List<ReservationDTO> reservations = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -55,7 +56,7 @@ public class UserDTO {
         return contactPhone;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 

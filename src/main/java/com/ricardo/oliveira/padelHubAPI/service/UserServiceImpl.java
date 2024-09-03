@@ -2,6 +2,7 @@ package com.ricardo.oliveira.padelHubAPI.service;
 
 import com.ricardo.oliveira.padelHubAPI.dto.LoginDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.RegisterDTO;
+import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
                 passwordEncoder.encode(registerDTO.getPassword()),
                 registerDTO.getEmail(),
                 registerDTO.getContactPhone(),
-                registerDTO.getRole()
+                Role.valueOf(registerDTO.getRole().toUpperCase())
         );
 
         return userRepository.save(user);
