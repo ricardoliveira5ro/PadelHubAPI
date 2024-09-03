@@ -15,7 +15,7 @@ public class ClubDTO {
     private String address;
     private String contactEmail;
     private String contactPhone;
-    private List<CourtDTO> courts = new ArrayList<>();
+    private final List<CourtDTO> courts = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

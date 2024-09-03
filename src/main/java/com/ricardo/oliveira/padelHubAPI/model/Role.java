@@ -5,7 +5,7 @@ public enum Role {
     CLUB_OWNER("CLUB_OWNER"),
     PLAYER("PLAYER");
 
-    private String value;
+    private final String value;
 
     Role(String value) {
         this.value = value;

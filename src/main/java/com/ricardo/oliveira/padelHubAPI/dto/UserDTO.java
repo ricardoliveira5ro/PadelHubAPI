@@ -15,7 +15,7 @@ public class UserDTO {
     private String contactEmail;
     private String contactPhone;
     private Role role;
-    private List<ReservationDTO> reservations = new ArrayList<>();
+    private final List<ReservationDTO> reservations = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

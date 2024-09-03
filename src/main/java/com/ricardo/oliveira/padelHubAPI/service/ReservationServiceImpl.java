@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    private ReservationRepository reservationRepository;
+    private final ReservationRepository reservationRepository;
 
     @Autowired
     public ReservationServiceImpl(ReservationRepository userRepository) {
