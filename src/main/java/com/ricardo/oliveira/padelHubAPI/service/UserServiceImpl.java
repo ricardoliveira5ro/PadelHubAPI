@@ -13,9 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -30,32 +27,6 @@ public class UserServiceImpl implements UserService {
         this.clubRepository = clubRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-    }
-
-    @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public User findById(Integer id) {
-        Optional<User> result = userRepository.findById(id);
-
-        User user;
-
-        if (result.isPresent()) {
-            user = result.get();
-        }
-        else {
-            throw new RuntimeException("Did not find user id - " + id);
-        }
-
-        return user;
-    }
-
-    @Override
-    public User save(User user) {
-        return userRepository.save(user);
     }
 
     @Override
