@@ -36,7 +36,7 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> register(@RequestBody SignupRequestDTO signupRequestDTO) {
         if (signupRequestDTO.getClub() != null && !signupRequestDTO.getRole().equalsIgnoreCase(Role.CLUB_OWNER.getValue()))
             throw new RuntimeException("You are authenticated as a " + signupRequestDTO.getRole() + " user. " +
-                                        "Only " + Role.CLUB_OWNER.getValue() + " users can register a new club");
+                                        "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
         User user = userService.signup(signupRequestDTO);
 
@@ -54,6 +54,10 @@ public class UserController {
 
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getName().equals("anonymousUser")) {
+            throw new RuntimeException("No user authenticated");
+        }
 
         return (User) authentication.getPrincipal();
     }
