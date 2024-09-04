@@ -1,15 +1,15 @@
-package com.ricardo.oliveira.padelHubAPI.dto;
+package com.ricardo.oliveira.padelHubAPI.dto.request;
 
 import jakarta.validation.constraints.Pattern;
 
-public class RegisterDTO {
+public class SignupRequestDTO {
 
     private String password;
     private String firstName;
     private String lastName;
     private String email;
     private String contactPhone;
-    private RegisterClubDTO club;
+    private ClubRequestDTO club;
 
     @Pattern(regexp = "ADMIN|CLUB_OWNER|PLAYER", message = "Invalid role. Allowed values are ADMIN, CLUB_OWNER, PLAYER")
     private String role;
@@ -39,7 +39,7 @@ public class RegisterDTO {
         return role;
     }
 
-    public RegisterClubDTO getClub() {
+    public ClubRequestDTO getClub() {
         return club;
     }
 }

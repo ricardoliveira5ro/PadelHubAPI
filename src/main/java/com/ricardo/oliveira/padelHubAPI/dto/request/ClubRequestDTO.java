@@ -1,6 +1,6 @@
-package com.ricardo.oliveira.padelHubAPI.dto;
+package com.ricardo.oliveira.padelHubAPI.dto.request;
 
-public class RegisterClubDTO {
+public class ClubRequestDTO {
 
     private String name;
     private String description;
