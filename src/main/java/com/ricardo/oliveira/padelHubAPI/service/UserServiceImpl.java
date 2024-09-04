@@ -1,7 +1,7 @@
 package com.ricardo.oliveira.padelHubAPI.service;
 
-import com.ricardo.oliveira.padelHubAPI.dto.LoginDTO;
-import com.ricardo.oliveira.padelHubAPI.dto.RegisterDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.request.LoginRequestDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.request.SignupRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
@@ -30,23 +30,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User signup(RegisterDTO registerDTO) {
+    public User signup(SignupRequestDTO signupRequestDTO) {
         User user = new User(
-                registerDTO.getFirstName(),
-                registerDTO.getLastName(),
-                passwordEncoder.encode(registerDTO.getPassword()),
-                registerDTO.getEmail(),
-                registerDTO.getContactPhone(),
-                Role.valueOf(registerDTO.getRole().toUpperCase())
+                signupRequestDTO.getFirstName(),
+                signupRequestDTO.getLastName(),
+                passwordEncoder.encode(signupRequestDTO.getPassword()),
+                signupRequestDTO.getEmail(),
+                signupRequestDTO.getContactPhone(),
+                Role.valueOf(signupRequestDTO.getRole().toUpperCase())
         );
 
-        if (registerDTO.getClub() != null) {
+        if (signupRequestDTO.getClub() != null) {
             Club club = new Club(
-                    registerDTO.getClub().getName(),
-                    registerDTO.getClub().getDescription(),
-                    registerDTO.getClub().getAddress(),
-                    registerDTO.getClub().getContactEmail(),
-                    registerDTO.getClub().getContactPhone()
+                    signupRequestDTO.getClub().getName(),
+                    signupRequestDTO.getClub().getDescription(),
+                    signupRequestDTO.getClub().getAddress(),
+                    signupRequestDTO.getClub().getContactEmail(),
+                    signupRequestDTO.getClub().getContactPhone()
             );
             clubRepository.save(club);
             user.setClub(club);
@@ -60,9 +60,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User authenticate(LoginDTO loginDTO) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
+    public User authenticate(LoginRequestDTO loginRequestDTO) {
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword())
+        );
 
-        return userRepository.findByContactEmail(loginDTO.getEmail()).orElseThrow();
+        return userRepository.findByContactEmail(loginRequestDTO.getEmail()).orElseThrow();
     }
 }

@@ -1,9 +1,9 @@
 package com.ricardo.oliveira.padelHubAPI.controller;
 
-import com.ricardo.oliveira.padelHubAPI.dto.LoginDTO;
-import com.ricardo.oliveira.padelHubAPI.dto.LoginResponse;
-import com.ricardo.oliveira.padelHubAPI.dto.RegisterDTO;
-import com.ricardo.oliveira.padelHubAPI.dto.UserDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.request.LoginRequestDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.request.SignupRequestDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.response.LoginResponseDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.response.UserResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.service.JwtService;
@@ -28,28 +28,28 @@ public class UserController {
     }
 
     @GetMapping("/current-user")
-    public ResponseEntity<UserDTO> authenticatedUser() {
-        return ResponseEntity.ok(new UserDTO(getCurrentUser()));
+    public ResponseEntity<UserResponseDTO> authenticatedUser() {
+        return ResponseEntity.ok(new UserResponseDTO(getCurrentUser()));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserDTO> register(@RequestBody RegisterDTO registerDTO) {
-        if (registerDTO.getClub() != null && getCurrentUser().getRole() != Role.CLUB_OWNER)
-            throw new RuntimeException("You are authenticated as a " + registerDTO.getRole() + " user. " +
+    public ResponseEntity<UserResponseDTO> register(@RequestBody SignupRequestDTO signupRequestDTO) {
+        if (signupRequestDTO.getClub() != null && !signupRequestDTO.getRole().equalsIgnoreCase(Role.CLUB_OWNER.getValue()))
+            throw new RuntimeException("You are authenticated as a " + signupRequestDTO.getRole() + " user. " +
                                         "Only " + Role.CLUB_OWNER.getValue() + " users can register a new club");
 
-        User user = userService.signup(registerDTO);
+        User user = userService.signup(signupRequestDTO);
 
-        return ResponseEntity.ok(new UserDTO(user));
+        return ResponseEntity.ok(new UserResponseDTO(user));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginDTO loginDTO) {
-        User user = userService.authenticate(loginDTO);
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+        User user = userService.authenticate(loginRequestDTO);
 
         String token = jwtService.generateToken(user);
 
-        return ResponseEntity.ok(new LoginResponse(user.getUsername(), token, jwtService.getExpirationTime()));
+        return ResponseEntity.ok(new LoginResponseDTO(user.getUsername(), token, jwtService.getExpirationTime()));
     }
 
     private User getCurrentUser() {
