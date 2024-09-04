@@ -1,17 +1,16 @@
 package com.ricardo.oliveira.padelHubAPI.controller;
 
-import com.ricardo.oliveira.padelHubAPI.dto.ClubDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.request.ClubRequestDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.response.ClubResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
+import com.ricardo.oliveira.padelHubAPI.model.Role;
+import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.service.ClubService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/clubs")
@@ -24,27 +23,38 @@ public class ClubController {
         this.clubService = clubService;
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<ClubDTO>> findAll() {
-        List<Club> clubs = clubService.findAll();
-        List<ClubDTO> clubDTOS = new ArrayList<>();
+    @GetMapping("/my-club")
+    public ResponseEntity<ClubResponseDTO> myClub() {
+        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
-        for (Club club : clubs) {
-            clubDTOS.add(new ClubDTO(club));
-        }
+        int clubId = (getCurrentUser().getClub() != null) ? getCurrentUser().getClub().getId() : -1;
 
-        return ResponseEntity.ok(clubDTOS);
+        Club club = clubService.findById(clubId);
+        ClubResponseDTO ClubResponseDTO = new ClubResponseDTO(club);
+
+        return ResponseEntity.ok(ClubResponseDTO);
     }
 
-    @GetMapping("/{clubId}")
-    public ResponseEntity<ClubDTO> findById(@PathVariable int clubId) {
-        Club club = clubService.findById(clubId);
+    @PostMapping("/add-club")
+    public ResponseEntity<ClubResponseDTO> addClub(@RequestBody ClubRequestDTO clubRequestDTO) {
+        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
-        if (club == null) {
-            throw new RuntimeException("Club id not found - " + clubId);
+        Club club = clubService.save(clubRequestDTO, getCurrentUser());
+
+        return ResponseEntity.ok(new ClubResponseDTO(club));
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getName().equals("anonymousUser")) {
+            throw new RuntimeException("No user authenticated");
         }
 
-        ClubDTO clubDTO = new ClubDTO(club);
-        return ResponseEntity.ok(clubDTO);
+        return (User) authentication.getPrincipal();
     }
 }

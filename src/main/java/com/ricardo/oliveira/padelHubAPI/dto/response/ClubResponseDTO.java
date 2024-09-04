@@ -1,5 +1,6 @@
-package com.ricardo.oliveira.padelHubAPI.dto;
+package com.ricardo.oliveira.padelHubAPI.dto.response;
 
+import com.ricardo.oliveira.padelHubAPI.dto.CourtDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
 
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClubDTO {
+public class ClubResponseDTO {
 
     private int id;
     private String name;
@@ -19,9 +20,9 @@ public class ClubDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public ClubDTO() {}
+    public ClubResponseDTO() {}
 
-    public ClubDTO(Club club) {
+    public ClubResponseDTO(Club club) {
         this.id = club.getId();
         this.name = club.getName();
         this.description = club.getDescription();
