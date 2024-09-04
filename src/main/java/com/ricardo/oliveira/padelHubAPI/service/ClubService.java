@@ -1,14 +1,12 @@
 package com.ricardo.oliveira.padelHubAPI.service;
 
+import com.ricardo.oliveira.padelHubAPI.dto.request.ClubRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
-
-import java.util.List;
+import com.ricardo.oliveira.padelHubAPI.model.User;
 
 public interface ClubService {
 
-    List<Club> findAll();
-
     Club findById(Integer id);
 
-    Club save(Club club);
+    Club save(ClubRequestDTO clubRequestDTO, User clubOwner);
 }
