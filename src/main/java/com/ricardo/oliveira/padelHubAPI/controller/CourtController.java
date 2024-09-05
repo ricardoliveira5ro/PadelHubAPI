@@ -1,10 +1,14 @@
 package com.ricardo.oliveira.padelHubAPI.controller;
 
-import com.ricardo.oliveira.padelHubAPI.dto.CourtDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.response.CourtResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
+import com.ricardo.oliveira.padelHubAPI.model.Role;
+import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.service.CourtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,27 +28,39 @@ public class CourtController {
         this.courtService = courtService;
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<CourtDTO>> findAll() {
-        List<Court> courts = courtService.findAll();
-        List<CourtDTO> courtDTOS = new ArrayList<>();
+    @GetMapping("/my-courts")
+    public ResponseEntity<List<CourtResponseDTO>> courts() {
+        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
-        for (Court court : courts) {
-            courtDTOS.add(new CourtDTO(court));
-        }
+        List<Court> courts = courtService.findAll(getCurrentUser());
 
-        return ResponseEntity.ok(courtDTOS);
+        return ResponseEntity.ok(new ArrayList<>(courts.stream().map(CourtResponseDTO::new).toList()));
     }
 
-    @GetMapping("/{courtId}")
-    public ResponseEntity<CourtDTO> findById(@PathVariable int courtId) {
-        Court court = courtService.findById(courtId);
+    @GetMapping("/my-courts/{court_id}")
+    public ResponseEntity<CourtResponseDTO> courtById(@PathVariable int court_id) {
+        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
-        if (court == null) {
-            throw new RuntimeException("Court id not found - " + courtId);
+        //if (getCurrentUser().getClub() != null) {
+        //    if (getCurrentUser().getClub().getCourts().stream().anyMatch(court -> court.getId() == court_id)) {
+        //        throw new RuntimeException("Did not find court id - " + court_id);
+        //    }
+        //}
+
+        return ResponseEntity.ok(new CourtResponseDTO(courtService.findById(court_id, getCurrentUser())));
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getName().equals("anonymousUser")) {
+            throw new RuntimeException("No user authenticated");
         }
 
-        CourtDTO courtDTO = new CourtDTO(court);
-        return ResponseEntity.ok(courtDTO);
+        return (User) authentication.getPrincipal();
     }
 }

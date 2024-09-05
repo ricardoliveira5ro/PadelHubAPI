@@ -1,6 +1,7 @@
 package com.ricardo.oliveira.padelHubAPI.service;
 
 import com.ricardo.oliveira.padelHubAPI.dto.request.ClubRequestDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.request.CourtRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
@@ -60,6 +61,16 @@ public class ClubServiceImpl implements ClubService {
             clubRequestDTO.getContactEmail(),
             clubRequestDTO.getContactPhone()
         );
+
+        for (CourtRequestDTO courtRequestDTO : clubRequestDTO.getCourts()) {
+            Court court = new Court(
+                courtRequestDTO.getName(),
+                courtRequestDTO.getSurface(),
+                courtRequestDTO.getCourtEnvironment()
+            );
+
+            club.addCourt(court);
+        }
 
         clubOwner.setClub(club);
         User user = userRepository.save(clubOwner);
