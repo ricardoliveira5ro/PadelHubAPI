@@ -1,5 +1,7 @@
 package com.ricardo.oliveira.padelHubAPI.dto.request;
 
+import java.util.List;
+
 public class ClubRequestDTO {
 
     private String name;
@@ -7,6 +9,7 @@ public class ClubRequestDTO {
     private String address;
     private String contactEmail;
     private String contactPhone;
+    private List<CourtRequestDTO> courts;
 
     public String getName() {
         return name;
@@ -26,5 +29,9 @@ public class ClubRequestDTO {
 
     public String getContactPhone() {
         return contactPhone;
+    }
+
+    public List<CourtRequestDTO> getCourts() {
+        return courts;
     }
 }

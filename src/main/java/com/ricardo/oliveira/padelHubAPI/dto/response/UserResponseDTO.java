@@ -16,6 +16,7 @@ public class UserResponseDTO {
     private String contactEmail;
     private String contactPhone;
     private Role role;
+    private String clubId;
     private final List<ReservationDTO> reservations = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -28,6 +29,7 @@ public class UserResponseDTO {
         this.contactEmail = user.getContactEmail();
         this.contactPhone = user.getContactPhone();
         this.role = user.getRole();
+        this.clubId = user.getClub() != null ? String.valueOf(user.getClub().getId()): null;
         convertReservationsToDTO(user.getReservations());
         this.createdAt = user.getCreatedAt();
         this.updatedAt = user.getUpdatedAt();
@@ -59,6 +61,10 @@ public class UserResponseDTO {
 
     public Role getRole() {
         return role;
+    }
+
+    public String getClubId() {
+        return clubId;
     }
 
     public List<ReservationDTO> getReservations() {
