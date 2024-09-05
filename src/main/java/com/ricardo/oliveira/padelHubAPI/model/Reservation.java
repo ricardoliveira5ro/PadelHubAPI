@@ -18,11 +18,11 @@ public class Reservation {
     private int id;
 
     @Column(name = "reservation_start_time")
-    @NotBlank
+    @NotNull
     private LocalDateTime reservationStartTime;
 
     @Column(name = "reservation_end_time")
-    @NotBlank
+    @NotNull
     private LocalDateTime reservationEndTime;
 
     @Column(name = "status")
