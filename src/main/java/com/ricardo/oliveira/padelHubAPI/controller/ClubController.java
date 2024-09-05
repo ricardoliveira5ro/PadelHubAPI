@@ -2,6 +2,7 @@ package com.ricardo.oliveira.padelHubAPI.controller;
 
 import com.ricardo.oliveira.padelHubAPI.dto.request.ClubRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.ClubResponseDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.response.UserResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
@@ -11,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/clubs")
@@ -46,6 +50,28 @@ public class ClubController {
         Club club = clubService.save(clubRequestDTO, getCurrentUser());
 
         return ResponseEntity.ok(new ClubResponseDTO(club));
+    }
+
+    @PutMapping("/update-club")
+    public ResponseEntity<ClubResponseDTO> updateClub(@RequestBody ClubRequestDTO clubRequestDTO) {
+        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
+
+        Club club = clubService.update(clubRequestDTO, getCurrentUser());
+
+        return ResponseEntity.ok(new ClubResponseDTO(club));
+    }
+
+    @GetMapping("/my-club/players")
+    public ResponseEntity<List<UserResponseDTO>> players() {
+        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
+
+        List<User> players = clubService.findPlayersWithReservationsInClub(getCurrentUser());
+
+        return ResponseEntity.ok(new ArrayList<>(players.stream().map(UserResponseDTO::new).toList()));
     }
 
     private User getCurrentUser() {
