@@ -1,6 +1,5 @@
 package com.ricardo.oliveira.padelHubAPI.dto.response;
 
-import com.ricardo.oliveira.padelHubAPI.dto.CourtDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
 
@@ -16,7 +15,7 @@ public class ClubResponseDTO {
     private String address;
     private String contactEmail;
     private String contactPhone;
-    private final List<CourtDTO> courts = new ArrayList<>();
+    private final List<CourtResponseDTO> courts = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -37,7 +36,7 @@ public class ClubResponseDTO {
     private void convertCourtsToDTO(List<Court> tmpCourts) {
         if (tmpCourts != null) {
             for (Court court : tmpCourts) {
-                this.courts.add(new CourtDTO(court));
+                this.courts.add(new CourtResponseDTO(court));
             }
         }
     }
@@ -66,7 +65,7 @@ public class ClubResponseDTO {
         return contactPhone;
     }
 
-    public List<CourtDTO> getCourts() {
+    public List<CourtResponseDTO> getCourts() {
         return courts;
     }
 

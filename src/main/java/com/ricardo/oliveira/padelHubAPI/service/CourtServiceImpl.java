@@ -2,6 +2,7 @@ package com.ricardo.oliveira.padelHubAPI.service;
 
 import com.ricardo.oliveira.padelHubAPI.model.Court;
 import com.ricardo.oliveira.padelHubAPI.model.User;
+import com.ricardo.oliveira.padelHubAPI.repository.ClubRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.CourtRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,20 @@ import java.util.Optional;
 public class CourtServiceImpl implements CourtService {
 
     private final CourtRepository courtRepository;
+    private final ClubService clubService;
 
     @Autowired
-    public CourtServiceImpl(CourtRepository courtRepository) {
+    public CourtServiceImpl(CourtRepository courtRepository, ClubService clubService) {
         this.courtRepository = courtRepository;
+        this.clubService = clubService;
+    }
+
+    @Override
+    public List<Court> findByClubId(Integer clubId) {
+        // Search if clubs exists
+        clubService.findById(clubId);
+
+        return courtRepository.findByClub_Id(clubId);
     }
 
     @Override
@@ -44,10 +55,5 @@ public class CourtServiceImpl implements CourtService {
         }
 
         return court;
-    }
-
-    @Override
-    public Court save(Court court) {
-        return courtRepository.save(court);
     }
 }
