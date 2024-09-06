@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.plaf.PanelUI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,11 @@ public class CourtController {
     @Autowired
     public CourtController(CourtService courtService) {
         this.courtService = courtService;
+    }
+
+    @GetMapping("/courtsByClub/{club_id}")
+    public ResponseEntity<List<CourtShortResponseDTO>> courtsByClub(@PathVariable int club_id) {
+        return ResponseEntity.ok(new ArrayList<>(courtService.findByClubId(club_id).stream().map(CourtShortResponseDTO::new).toList()));
     }
 
     @GetMapping("/{court_id}")
