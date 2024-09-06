@@ -2,6 +2,7 @@ package com.ricardo.oliveira.padelHubAPI.controller;
 
 import com.ricardo.oliveira.padelHubAPI.dto.request.ClubRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.ClubResponseDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.response.ClubShortResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.UserResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
@@ -25,6 +26,16 @@ public class ClubController {
     @Autowired
     public ClubController(ClubService clubService) {
         this.clubService = clubService;
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<List<ClubShortResponseDTO>> clubs() {
+        return ResponseEntity.ok(new ArrayList<>(clubService.findAll().stream().map(ClubShortResponseDTO::new).toList()));
+    }
+
+    @GetMapping("/{club_id}")
+    public ResponseEntity<ClubShortResponseDTO> club(@PathVariable int club_id) {
+        return ResponseEntity.ok(new ClubShortResponseDTO(clubService.findById(club_id)));
     }
 
     @GetMapping("/my-club")

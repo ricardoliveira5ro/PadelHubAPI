@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface ClubService {
 
+    List<Club> findAll();
+
     Club findById(Integer id);
 
     Club save(ClubRequestDTO clubRequestDTO, User clubOwner);

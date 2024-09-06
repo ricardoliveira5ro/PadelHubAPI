@@ -25,15 +25,16 @@ public class ClubServiceImpl implements ClubService {
 
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
-    private final CourtRepository courtRepository;
-    private final ReservationRepository reservationRepository;
 
     @Autowired
-    public ClubServiceImpl(ClubRepository clubRepository, UserRepository userRepository, CourtRepository courtRepository, ReservationRepository reservationRepository) {
+    public ClubServiceImpl(ClubRepository clubRepository, UserRepository userRepository) {
         this.clubRepository = clubRepository;
         this.userRepository = userRepository;
-        this.courtRepository = courtRepository;
-        this.reservationRepository = reservationRepository;
+    }
+
+    @Override
+    public List<Club> findAll() {
+        return clubRepository.findAll();
     }
 
     @Override

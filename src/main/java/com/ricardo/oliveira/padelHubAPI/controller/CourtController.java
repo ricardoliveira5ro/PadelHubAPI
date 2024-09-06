@@ -1,6 +1,7 @@
 package com.ricardo.oliveira.padelHubAPI.controller;
 
 import com.ricardo.oliveira.padelHubAPI.dto.response.CourtResponseDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.response.CourtShortResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
@@ -28,30 +29,20 @@ public class CourtController {
         this.courtService = courtService;
     }
 
+    @GetMapping("/{court_id}")
+    public ResponseEntity<CourtShortResponseDTO> court(@PathVariable int court_id) {
+        return ResponseEntity.ok(new CourtShortResponseDTO(courtService.findById(court_id)));
+    }
+
     @GetMapping("/my-courts")
     public ResponseEntity<List<CourtResponseDTO>> courts() {
         if (getCurrentUser().getRole() != Role.CLUB_OWNER)
             throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
                     "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
-        List<Court> courts = courtService.findAll(getCurrentUser());
+        List<Court> courts = courtService.findByClubId(getCurrentUser());
 
         return ResponseEntity.ok(new ArrayList<>(courts.stream().map(CourtResponseDTO::new).toList()));
-    }
-
-    @GetMapping("/my-courts/{court_id}")
-    public ResponseEntity<CourtResponseDTO> courtById(@PathVariable int court_id) {
-        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
-            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
-                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
-
-        //if (getCurrentUser().getClub() != null) {
-        //    if (getCurrentUser().getClub().getCourts().stream().anyMatch(court -> court.getId() == court_id)) {
-        //        throw new RuntimeException("Did not find court id - " + court_id);
-        //    }
-        //}
-
-        return ResponseEntity.ok(new CourtResponseDTO(courtService.findById(court_id, getCurrentUser())));
     }
 
     private User getCurrentUser() {

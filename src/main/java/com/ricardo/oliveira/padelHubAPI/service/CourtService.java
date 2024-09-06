@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface CourtService {
 
-    List<Court> findAll(User clubOwner);
+    List<Court> findByClubId(User clubOwner);
 
-    Court findById(Integer id, User clubOwner);
+    Court findById(Integer id);
 
     Court save(Court court);
 }
