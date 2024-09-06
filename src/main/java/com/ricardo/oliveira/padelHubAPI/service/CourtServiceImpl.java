@@ -15,16 +15,14 @@ import java.util.Optional;
 public class CourtServiceImpl implements CourtService {
 
     private final CourtRepository courtRepository;
-    private final UserRepository userRepository;
 
     @Autowired
-    public CourtServiceImpl(CourtRepository courtRepository, UserRepository userRepository) {
+    public CourtServiceImpl(CourtRepository courtRepository) {
         this.courtRepository = courtRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
-    public List<Court> findAll(User clubOwner) {
+    public List<Court> findByClubId(User clubOwner) {
         if (clubOwner.getClub() == null) {
             return new ArrayList<>();
         }
@@ -33,18 +31,13 @@ public class CourtServiceImpl implements CourtService {
     }
 
     @Override
-    public Court findById(Integer id, User clubOwner) {
+    public Court findById(Integer id) {
         Optional<Court> result = courtRepository.findById(id);
 
         Court court;
 
         if (result.isPresent()) {
             court = result.get();
-
-            // Avoid querying others courts
-            if (clubOwner.getClub().getId() != court.getClub().getId()) {
-                throw new RuntimeException("Did not find court id - " + id);
-            }
         }
         else {
             throw new RuntimeException("Did not find court id - " + id);
