@@ -1,5 +1,6 @@
 package com.ricardo.oliveira.padelHubAPI.controller;
 
+import com.ricardo.oliveira.padelHubAPI.dto.request.CourtRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.CourtResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.CourtShortResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
@@ -10,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.swing.plaf.PanelUI;
 import java.util.ArrayList;
@@ -49,6 +47,29 @@ public class CourtController {
         List<Court> courts = courtService.findByClubId(getCurrentUser());
 
         return ResponseEntity.ok(new ArrayList<>(courts.stream().map(CourtResponseDTO::new).toList()));
+    }
+
+    @PostMapping("/add-court")
+    public ResponseEntity<CourtResponseDTO> addCourt(@RequestBody CourtRequestDTO courtRequestDTO) {
+        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
+
+        if (getCurrentUser().getClub() == null)
+            throw new RuntimeException("No club to assign a new court");
+
+        Court court = courtService.save(courtRequestDTO, getCurrentUser());
+
+        return ResponseEntity.ok(new CourtResponseDTO(court));
+    }
+
+    @PutMapping("update-court/{court_id}")
+    public ResponseEntity<CourtResponseDTO> updateCourt(@PathVariable int court_id, @RequestBody CourtRequestDTO courtRequestDTO) {
+        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
+
+        return ResponseEntity.ok(new CourtResponseDTO(courtService.update(court_id, courtRequestDTO)));
     }
 
     private User getCurrentUser() {
