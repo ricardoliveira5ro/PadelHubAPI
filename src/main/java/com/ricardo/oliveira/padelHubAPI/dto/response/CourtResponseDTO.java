@@ -15,7 +15,7 @@ public class CourtResponseDTO {
     private String surface;
     private String courtEnvironment;
     private int clubId;
-    private final List<ReservationDTO> reservations = new ArrayList<>();
+    private final List<ReservationResponseDTO> reservations = new ArrayList<>();
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -35,7 +35,7 @@ public class CourtResponseDTO {
     private void convertReservationsToDTO(List<Reservation> tmpReservations) {
         if (tmpReservations != null) {
             for (Reservation reservation : tmpReservations) {
-                this.reservations.add(new ReservationDTO(reservation));
+                this.reservations.add(new ReservationResponseDTO(reservation));
             }
         }
     }
@@ -60,7 +60,7 @@ public class CourtResponseDTO {
         return clubId;
     }
 
-    public List<ReservationDTO> getReservations() {
+    public List<ReservationResponseDTO> getReservations() {
         return reservations;
     }
 

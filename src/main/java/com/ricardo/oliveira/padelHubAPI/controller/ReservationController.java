@@ -1,10 +1,15 @@
 package com.ricardo.oliveira.padelHubAPI.controller;
 
 import com.ricardo.oliveira.padelHubAPI.dto.ReservationDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.response.ReservationResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
+import com.ricardo.oliveira.padelHubAPI.model.Role;
+import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,27 +29,37 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<ReservationDTO>> findAll() {
-        List<Reservation> reservations = reservationService.findAll();
-        List<ReservationDTO> reservationDTOS = new ArrayList<>();
+    @GetMapping("/club-reservations")
+    public ResponseEntity<List<ReservationResponseDTO>> clubReservations() {
+        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
-        for (Reservation reservation : reservations) {
-            reservationDTOS.add(new ReservationDTO(reservation));
-        }
+        if (getCurrentUser().getClub() == null)
+            throw new RuntimeException("No club available");
 
-        return ResponseEntity.ok(reservationDTOS);
+        return ResponseEntity.ok(new ArrayList<>(reservationService.findAllByClub(getCurrentUser()).stream().map(ReservationResponseDTO::new).toList()));
     }
 
-    @GetMapping("/{reservationId}")
-    public ResponseEntity<ReservationDTO> findById(@PathVariable int reservationId) {
-        Reservation reservation = reservationService.findById(reservationId);
+    @GetMapping("/club-reservations/{reservation_id}")
+    public ResponseEntity<ReservationResponseDTO> clubReservation(@PathVariable int reservation_id) {
+        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
-        if (reservation == null) {
-            throw new RuntimeException("Reservation id not found - " + reservationId);
+        if (getCurrentUser().getClub() == null)
+            throw new RuntimeException("No club available");
+
+        return ResponseEntity.ok(new ReservationResponseDTO(reservationService.findByIdByClub(getCurrentUser(), reservation_id)));
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getName().equals("anonymousUser")) {
+            throw new RuntimeException("No user authenticated");
         }
 
-        ReservationDTO reservationDTO = new ReservationDTO(reservation);
-        return ResponseEntity.ok(reservationDTO);
+        return (User) authentication.getPrincipal();
     }
 }
