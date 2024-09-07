@@ -1,14 +1,13 @@
 package com.ricardo.oliveira.padelHubAPI.service;
 
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
+import com.ricardo.oliveira.padelHubAPI.model.User;
 
 import java.util.List;
 
 public interface ReservationService {
 
-    List<Reservation> findAll();
+    List<Reservation> findAllByClub(User clubOwner);
 
-    Reservation findById(Integer id);
-
-    Reservation save(Reservation reservation);
+    Reservation findByIdByClub(User clubOwner, Integer reservationId);
 }

@@ -38,7 +38,7 @@ public class Court {
 
     @OneToMany(
         mappedBy = "court",
-        fetch = FetchType.LAZY,
+        fetch = FetchType.EAGER,
         cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH }
     )
     private List<Reservation> reservations;

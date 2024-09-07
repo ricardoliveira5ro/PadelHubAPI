@@ -40,7 +40,7 @@ public class Club {
 
     @OneToMany(
         mappedBy = "club",
-        fetch = FetchType.LAZY,
+        fetch = FetchType.EAGER,
         cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE }
     )
     private List<Court> courts;
