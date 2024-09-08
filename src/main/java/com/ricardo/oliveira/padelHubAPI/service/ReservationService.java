@@ -1,5 +1,7 @@
 package com.ricardo.oliveira.padelHubAPI.service;
 
+import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationRequestDTO;
+import com.ricardo.oliveira.padelHubAPI.model.Court;
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 
@@ -10,4 +12,8 @@ public interface ReservationService {
     List<Reservation> findAllByClub(User clubOwner);
 
     Reservation findByIdByClub(User clubOwner, Integer reservationId);
+
+    List<Reservation> findAllGames(User player);
+
+    Reservation save(User player, ReservationRequestDTO reservationRequestDTO);
 }

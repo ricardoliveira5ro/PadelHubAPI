@@ -1,6 +1,5 @@
 package com.ricardo.oliveira.padelHubAPI.dto.response;
 
-import com.ricardo.oliveira.padelHubAPI.dto.ReservationDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
