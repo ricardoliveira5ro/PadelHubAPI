@@ -1,12 +1,16 @@
 package com.ricardo.oliveira.padelHubAPI.service;
 
+import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.repository.ReservationRepository;
+import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,10 +19,16 @@ import java.util.Optional;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
+    private final CourtService courtService;
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @Autowired
-    public ReservationServiceImpl(ReservationRepository userRepository) {
-        this.reservationRepository = userRepository;
+    public ReservationServiceImpl(ReservationRepository reservationRepository, UserRepository userRepository, CourtService courtService) {
+        this.reservationRepository = reservationRepository;
+        this.userRepository = userRepository;
+        this.courtService = courtService;
     }
 
     @Override
@@ -40,5 +50,28 @@ public class ReservationServiceImpl implements ReservationService {
                 .filter(reservation -> reservation.getId() == reservationId)
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Did not find reservation id - " + reservationId));
+    }
+
+    @Override
+    public List<Reservation> findAllGames(User player) {
+        return reservationRepository.findByUser_Id(player.getId());
+    }
+
+    @Override
+    public Reservation save(User player, ReservationRequestDTO reservationRequestDTO) {
+        Court court = courtService.findById(Integer.parseInt(reservationRequestDTO.getCourtId()));
+
+        Reservation reservation = new Reservation(
+            LocalDateTime.parse(reservationRequestDTO.getReservationStartTime(), formatter),
+            LocalDateTime.parse(reservationRequestDTO.getReservationEndTime(), formatter),
+            "CONFIRMED"
+        );
+
+        reservation.setCourt(court);
+        reservation.setUser(player);
+
+        player.addReservation(reservation);
+
+        return reservationRepository.findByUser_Id(court.getId()).getLast();
     }
 }
