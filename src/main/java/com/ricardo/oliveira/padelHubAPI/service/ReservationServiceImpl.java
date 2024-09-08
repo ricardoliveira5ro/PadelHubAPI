@@ -1,8 +1,10 @@
 package com.ricardo.oliveira.padelHubAPI.service;
 
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationRequestDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationStatusRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
+import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.repository.ReservationRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
@@ -73,5 +75,39 @@ public class ReservationServiceImpl implements ReservationService {
         player.addReservation(reservation);
 
         return reservationRepository.findByUser_Id(court.getId()).getLast();
+    }
+
+    @Override
+    public Reservation changeStatus(User user, Integer reservationId, ReservationStatusRequestDTO reservationStatusRequestDTO) {
+        Reservation reservation;
+
+        if (user.getRole() == Role.CLUB_OWNER) {
+            reservation = findByIdByClub(user, reservationId);
+
+        } else {
+            reservation = findById(reservationId);
+
+            if (user.getRole() == Role.PLAYER && reservation.getUser().getId() != user.getId())
+                throw new RuntimeException("Did not find reservation id - " + reservationId);
+        }
+
+        reservation.setStatus(reservationStatusRequestDTO.getStatus());
+
+        return reservationRepository.save(reservation);
+    }
+
+    private Reservation findById(Integer reservationId) {
+        Optional<Reservation> result = reservationRepository.findById(reservationId);
+
+        Reservation reservation;
+
+        if (result.isPresent()) {
+            reservation = result.get();
+        }
+        else {
+            throw new RuntimeException("Did not find reservation id - " + reservationId);
+        }
+
+        return reservation;
     }
 }

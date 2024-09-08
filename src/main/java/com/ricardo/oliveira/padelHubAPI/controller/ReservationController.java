@@ -1,6 +1,7 @@
 package com.ricardo.oliveira.padelHubAPI.controller;
 
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationRequestDTO;
+import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationStatusRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.ReservationResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
@@ -60,6 +61,11 @@ public class ReservationController {
         Reservation reservation = reservationService.save(getCurrentUser(), reservationRequestDTO);
 
         return ResponseEntity.ok(new ReservationResponseDTO(reservation));
+    }
+
+    @PostMapping("/{reservation_id}/change-status")
+    public ResponseEntity<ReservationResponseDTO> changeStatus(@PathVariable int reservation_id, @RequestBody ReservationStatusRequestDTO reservationStatusRequestDTO) {
+        return ResponseEntity.ok(new ReservationResponseDTO(reservationService.changeStatus(getCurrentUser(), reservation_id, reservationStatusRequestDTO)));
     }
 
     private User getCurrentUser() {
