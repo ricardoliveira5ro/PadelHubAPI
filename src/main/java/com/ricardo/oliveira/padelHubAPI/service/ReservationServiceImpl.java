@@ -2,10 +2,7 @@ package com.ricardo.oliveira.padelHubAPI.service;
 
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationStatusRequestDTO;
-import com.ricardo.oliveira.padelHubAPI.model.Court;
-import com.ricardo.oliveira.padelHubAPI.model.Reservation;
-import com.ricardo.oliveira.padelHubAPI.model.Role;
-import com.ricardo.oliveira.padelHubAPI.model.User;
+import com.ricardo.oliveira.padelHubAPI.model.*;
 import com.ricardo.oliveira.padelHubAPI.repository.ReservationRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +63,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = new Reservation(
             LocalDateTime.parse(reservationRequestDTO.getReservationStartTime(), formatter),
             LocalDateTime.parse(reservationRequestDTO.getReservationEndTime(), formatter),
-            "CONFIRMED"
+            ReservationStatus.PENDING
         );
 
         reservation.setCourt(court);
@@ -91,7 +88,7 @@ public class ReservationServiceImpl implements ReservationService {
                 throw new RuntimeException("Did not find reservation id - " + reservationId);
         }
 
-        reservation.setStatus(reservationStatusRequestDTO.getStatus());
+        reservation.setStatus(ReservationStatus.valueOf(reservationStatusRequestDTO.getStatus().toUpperCase()));
 
         return reservationRepository.save(reservation);
     }

@@ -25,9 +25,10 @@ public class Reservation {
     @NotNull
     private LocalDateTime reservationEndTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    @NotBlank
-    private String status;
+    @NotNull
+    private ReservationStatus status;
 
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JoinColumn(name = "user_id")
@@ -49,7 +50,7 @@ public class Reservation {
 
     public Reservation() {}
 
-    public Reservation(LocalDateTime reservationStartTime, LocalDateTime reservationEndTime, String status) {
+    public Reservation(LocalDateTime reservationStartTime, LocalDateTime reservationEndTime, ReservationStatus status) {
         this.reservationStartTime = reservationStartTime;
         this.reservationEndTime = reservationEndTime;
         this.status = status;
@@ -79,11 +80,11 @@ public class Reservation {
         this.reservationEndTime = reservationEndTime;
     }
 
-    public String getStatus() {
+    public ReservationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ReservationStatus status) {
         this.status = status;
     }
 

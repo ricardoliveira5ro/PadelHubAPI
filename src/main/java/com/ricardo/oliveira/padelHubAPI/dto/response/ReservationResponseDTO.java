@@ -1,6 +1,7 @@
 package com.ricardo.oliveira.padelHubAPI.dto.response;
 
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
+import com.ricardo.oliveira.padelHubAPI.model.ReservationStatus;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +10,7 @@ public class ReservationResponseDTO {
     private int id;
     private LocalDateTime reservationStartTime;
     private LocalDateTime reservationEndTime;
-    private String status;
+    private ReservationStatus status;
     private int userId;
     private int courtId;
     private LocalDateTime createdAt;
@@ -40,7 +41,7 @@ public class ReservationResponseDTO {
         return reservationEndTime;
     }
 
-    public String getStatus() {
+    public ReservationStatus getStatus() {
         return status;
     }
 
