@@ -5,6 +5,8 @@ import com.ricardo.oliveira.padelHubAPI.model.Court;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ClubShortResponseDTO {
 
@@ -62,5 +64,18 @@ public class ClubShortResponseDTO {
 
     public List<CourtShortResponseDTO> getCourts() {
         return courts;
+    }
+
+    @Override
+    public String toString() {
+        return "ClubShortResponseDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", address='" + address + '\'' +
+                ", contactEmail='" + contactEmail + '\'' +
+                ", contactPhone='" + contactPhone + '\'' +
+                ", courts=" + courts.stream().map(Object::toString).collect(Collectors.joining(", ")) +
+                '}';
     }
 }

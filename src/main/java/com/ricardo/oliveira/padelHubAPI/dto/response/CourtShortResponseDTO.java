@@ -39,4 +39,15 @@ public class CourtShortResponseDTO {
     public int getClubId() {
         return clubId;
     }
+
+    @Override
+    public String toString() {
+        return "CourtShortResponseDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surface='" + surface + '\'' +
+                ", courtEnvironment='" + courtEnvironment + '\'' +
+                ", clubId=" + clubId +
+                '}';
+    }
 }

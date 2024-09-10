@@ -60,4 +60,18 @@ public class ReservationResponseDTO {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
+    @Override
+    public String toString() {
+        return "ReservationResponseDTO{" +
+                "id=" + id +
+                ", reservationStartTime=" + reservationStartTime +
+                ", reservationEndTime=" + reservationEndTime +
+                ", status=" + status +
+                ", userId=" + userId +
+                ", courtId=" + courtId +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

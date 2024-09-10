@@ -6,6 +6,7 @@ import com.ricardo.oliveira.padelHubAPI.model.Reservation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CourtResponseDTO {
 
@@ -69,5 +70,19 @@ public class CourtResponseDTO {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "CourtResponseDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surface='" + surface + '\'' +
+                ", courtEnvironment='" + courtEnvironment + '\'' +
+                ", clubId=" + clubId +
+                ", reservations=" + reservations.stream().map(Object::toString).collect(Collectors.joining(", ")) +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
