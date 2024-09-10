@@ -23,4 +23,13 @@ public class LoginResponseDTO {
     public long getExpiresIn() {
         return expiresIn;
     }
+
+    @Override
+    public String toString() {
+        return "LoginResponseDTO{" +
+                "username='" + username + '\'' +
+                ", token='" + token + '\'' +
+                ", expiresIn=" + expiresIn +
+                '}';
+    }
 }

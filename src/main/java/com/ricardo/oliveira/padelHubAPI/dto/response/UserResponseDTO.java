@@ -7,6 +7,8 @@ import com.ricardo.oliveira.padelHubAPI.model.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class UserResponseDTO {
 
@@ -76,5 +78,20 @@ public class UserResponseDTO {
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "UserResponseDTO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", contactEmail='" + contactEmail + '\'' +
+                ", contactPhone='" + contactPhone + '\'' +
+                ", role=" + role +
+                ", clubId='" + clubId + '\'' +
+                ", reservations=" + reservations.stream().map(Object::toString).collect(Collectors.joining(", ")) +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
