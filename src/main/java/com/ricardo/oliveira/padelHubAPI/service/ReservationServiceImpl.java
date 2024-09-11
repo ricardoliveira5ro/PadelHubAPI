@@ -2,6 +2,7 @@ package com.ricardo.oliveira.padelHubAPI.service;
 
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationStatusRequestDTO;
+import com.ricardo.oliveira.padelHubAPI.exceptions.NotFoundException;
 import com.ricardo.oliveira.padelHubAPI.model.*;
 import com.ricardo.oliveira.padelHubAPI.repository.ReservationRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
@@ -48,7 +49,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .flatMap(court -> court.getReservations().stream())
                 .filter(reservation -> reservation.getId() == reservationId)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Did not find reservation id - " + reservationId));
+                .orElseThrow(() -> new NotFoundException("Did not find reservation id - " + reservationId));
     }
 
     @Override
@@ -85,7 +86,7 @@ public class ReservationServiceImpl implements ReservationService {
             reservation = findById(reservationId);
 
             if (user.getRole() == Role.PLAYER && reservation.getUser().getId() != user.getId())
-                throw new RuntimeException("Did not find reservation id - " + reservationId);
+                throw new NotFoundException("Did not find reservation id - " + reservationId);
         }
 
         reservation.setStatus(ReservationStatus.valueOf(reservationStatusRequestDTO.getStatus().toUpperCase()));
@@ -102,7 +103,7 @@ public class ReservationServiceImpl implements ReservationService {
             reservation = result.get();
         }
         else {
-            throw new RuntimeException("Did not find reservation id - " + reservationId);
+            throw new NotFoundException("Did not find reservation id - " + reservationId);
         }
 
         return reservation;

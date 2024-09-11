@@ -2,15 +2,12 @@ package com.ricardo.oliveira.padelHubAPI.service;
 
 import com.ricardo.oliveira.padelHubAPI.dto.request.ClubRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.CourtRequestDTO;
+import com.ricardo.oliveira.padelHubAPI.exceptions.NotFoundException;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
-import com.ricardo.oliveira.padelHubAPI.model.Reservation;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.repository.ClubRepository;
-import com.ricardo.oliveira.padelHubAPI.repository.CourtRepository;
-import com.ricardo.oliveira.padelHubAPI.repository.ReservationRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -47,7 +44,7 @@ public class ClubServiceImpl implements ClubService {
             club = result.get();
         }
         else {
-            throw new RuntimeException("Did not find club id - " + id);
+            throw new NotFoundException("Did not find club id - " + id);
         }
 
         return club;
