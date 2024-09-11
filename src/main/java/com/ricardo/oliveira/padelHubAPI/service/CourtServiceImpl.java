@@ -1,6 +1,7 @@
 package com.ricardo.oliveira.padelHubAPI.service;
 
 import com.ricardo.oliveira.padelHubAPI.dto.request.CourtRequestDTO;
+import com.ricardo.oliveira.padelHubAPI.exceptions.NotFoundException;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
 import com.ricardo.oliveira.padelHubAPI.model.User;
@@ -57,7 +58,7 @@ public class CourtServiceImpl implements CourtService {
             court = result.get();
         }
         else {
-            throw new RuntimeException("Did not find court id - " + id);
+            throw new NotFoundException("Did not find court id - " + id);
         }
 
         return court;
