@@ -1,4 +1,4 @@
-package com.ricardo.oliveira.padelHubAPI.exceptions;
+package com.ricardo.oliveira.padelHubAPI.exception;
 
 public class NotFoundException extends RuntimeException {
 

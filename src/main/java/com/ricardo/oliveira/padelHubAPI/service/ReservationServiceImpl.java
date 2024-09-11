@@ -2,7 +2,7 @@ package com.ricardo.oliveira.padelHubAPI.service;
 
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationStatusRequestDTO;
-import com.ricardo.oliveira.padelHubAPI.exceptions.NotFoundException;
+import com.ricardo.oliveira.padelHubAPI.exception.NotFoundException;
 import com.ricardo.oliveira.padelHubAPI.model.*;
 import com.ricardo.oliveira.padelHubAPI.repository.ReservationRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
