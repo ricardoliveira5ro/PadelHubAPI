@@ -10,6 +10,7 @@ import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.service.JwtService;
 import com.ricardo.oliveira.padelHubAPI.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDTO> register(@RequestBody SignupRequestDTO signupRequestDTO) {
+    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody SignupRequestDTO signupRequestDTO) {
         if (signupRequestDTO.getClub() != null && !signupRequestDTO.getRole().equalsIgnoreCase(Role.CLUB_OWNER.getValue()))
             throw new RolePrivilegesException("You are authenticated as a " + signupRequestDTO.getRole() + " user. " +
                                         "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
