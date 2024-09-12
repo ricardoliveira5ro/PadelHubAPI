@@ -8,10 +8,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClubRepository extends JpaRepository<Club, Integer> {
 
     @Query("SELECT DISTINCT r.user FROM Reservation r WHERE r.court.club.id = :clubId")
     List<User> findPlayersWithReservationsInClub(@Param("clubId") int clubId);
+
+    Optional<Club> findByContactEmail(String contactEmail);
+
+    Optional<Club> findByContactPhone(String contactPhone);
 }

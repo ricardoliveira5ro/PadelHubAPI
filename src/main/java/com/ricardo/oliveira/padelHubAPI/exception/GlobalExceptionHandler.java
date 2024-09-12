@@ -27,8 +27,8 @@ public class GlobalExceptionHandler {
         if (exception instanceof RolePrivilegesException)
             return new ResponseEntity<>(new ErrorResponse(HttpStatus.FORBIDDEN.value(), exception.getMessage(), LocalDateTime.now()), HttpStatus.FORBIDDEN);
 
-        if (exception instanceof DataIntegrityViolationException)
-            return new ResponseEntity<>(new ErrorResponse(HttpStatus.CONFLICT.value(), "Constraint violated", LocalDateTime.now()), HttpStatus.CONFLICT);
+        if (exception instanceof InvalidRequestBodyException)
+            return new ResponseEntity<>(new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(), exception.getMessage(), LocalDateTime.now()), HttpStatus.UNPROCESSABLE_ENTITY);
 
         // Default
         return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage(), LocalDateTime.now()), HttpStatus.BAD_REQUEST);
