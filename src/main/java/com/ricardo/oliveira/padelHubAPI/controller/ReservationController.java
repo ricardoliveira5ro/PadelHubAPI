@@ -3,6 +3,9 @@ package com.ricardo.oliveira.padelHubAPI.controller;
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationStatusRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.ReservationResponseDTO;
+import com.ricardo.oliveira.padelHubAPI.exception.NotFoundException;
+import com.ricardo.oliveira.padelHubAPI.exception.RolePrivilegesException;
+import com.ricardo.oliveira.padelHubAPI.exception.UnauthenticatedException;
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
@@ -30,11 +33,11 @@ public class ReservationController {
     @GetMapping("/club-reservations")
     public ResponseEntity<List<ReservationResponseDTO>> clubReservations() {
         if (getCurrentUser().getRole() != Role.CLUB_OWNER)
-            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+            throw new RolePrivilegesException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
                     "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
         if (getCurrentUser().getClub() == null)
-            throw new RuntimeException("No club available");
+            throw new NotFoundException("Club not found, assign a new Club first");
 
         return ResponseEntity.ok(new ArrayList<>(reservationService.findAllByClub(getCurrentUser()).stream().map(ReservationResponseDTO::new).toList()));
     }
@@ -42,11 +45,11 @@ public class ReservationController {
     @GetMapping("/club-reservations/{reservation_id}")
     public ResponseEntity<ReservationResponseDTO> clubReservation(@PathVariable int reservation_id) {
         if (getCurrentUser().getRole() != Role.CLUB_OWNER)
-            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+            throw new RolePrivilegesException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
                     "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
         if (getCurrentUser().getClub() == null)
-            throw new RuntimeException("No club available");
+            throw new NotFoundException("Club not found, assign a new Club first");
 
         return ResponseEntity.ok(new ReservationResponseDTO(reservationService.findByIdByClub(getCurrentUser(), reservation_id)));
     }
@@ -72,7 +75,7 @@ public class ReservationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.getName().equals("anonymousUser")) {
-            throw new RuntimeException("No user authenticated");
+            throw new UnauthenticatedException("No user authenticated");
         }
 
         return (User) authentication.getPrincipal();
