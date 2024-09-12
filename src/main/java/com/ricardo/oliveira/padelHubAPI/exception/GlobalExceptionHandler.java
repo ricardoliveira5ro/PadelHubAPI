@@ -1,6 +1,7 @@
 package com.ricardo.oliveira.padelHubAPI.exception;
 
 import io.jsonwebtoken.JwtException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,6 +26,9 @@ public class GlobalExceptionHandler {
 
         if (exception instanceof RolePrivilegesException)
             return new ResponseEntity<>(new ErrorResponse(HttpStatus.FORBIDDEN.value(), exception.getMessage(), LocalDateTime.now()), HttpStatus.FORBIDDEN);
+
+        if (exception instanceof DataIntegrityViolationException)
+            return new ResponseEntity<>(new ErrorResponse(HttpStatus.CONFLICT.value(), "Constraint violated", LocalDateTime.now()), HttpStatus.CONFLICT);
 
         // Default
         return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage(), LocalDateTime.now()), HttpStatus.BAD_REQUEST);
