@@ -4,6 +4,8 @@ import com.ricardo.oliveira.padelHubAPI.dto.request.LoginRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.SignupRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.LoginResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.UserResponseDTO;
+import com.ricardo.oliveira.padelHubAPI.exception.RolePrivilegesException;
+import com.ricardo.oliveira.padelHubAPI.exception.UnauthenticatedException;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.service.JwtService;
@@ -35,7 +37,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDTO> register(@RequestBody SignupRequestDTO signupRequestDTO) {
         if (signupRequestDTO.getClub() != null && !signupRequestDTO.getRole().equalsIgnoreCase(Role.CLUB_OWNER.getValue()))
-            throw new RuntimeException("You are authenticated as a " + signupRequestDTO.getRole() + " user. " +
+            throw new RolePrivilegesException("You are authenticated as a " + signupRequestDTO.getRole() + " user. " +
                                         "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
         User user = userService.signup(signupRequestDTO);
@@ -56,7 +58,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.getName().equals("anonymousUser")) {
-            throw new RuntimeException("No user authenticated");
+            throw new UnauthenticatedException("No user authenticated");
         }
 
         return (User) authentication.getPrincipal();

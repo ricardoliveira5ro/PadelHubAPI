@@ -6,6 +6,8 @@ import com.ricardo.oliveira.padelHubAPI.dto.response.ClubShortResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.UserResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.exception.ErrorResponse;
 import com.ricardo.oliveira.padelHubAPI.exception.NotFoundException;
+import com.ricardo.oliveira.padelHubAPI.exception.RolePrivilegesException;
+import com.ricardo.oliveira.padelHubAPI.exception.UnauthenticatedException;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
@@ -45,7 +47,7 @@ public class ClubController {
     @GetMapping("/my-club")
     public ResponseEntity<ClubResponseDTO> myClub() {
         if (getCurrentUser().getRole() != Role.CLUB_OWNER)
-            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+            throw new RolePrivilegesException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
                     "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
         int clubId = (getCurrentUser().getClub() != null) ? getCurrentUser().getClub().getId() : -1;
@@ -59,7 +61,7 @@ public class ClubController {
     @PostMapping("/add-club")
     public ResponseEntity<ClubResponseDTO> addClub(@RequestBody ClubRequestDTO clubRequestDTO) {
         if (getCurrentUser().getRole() != Role.CLUB_OWNER)
-            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+            throw new RolePrivilegesException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
                     "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
         Club club = clubService.save(clubRequestDTO, getCurrentUser());
@@ -70,7 +72,7 @@ public class ClubController {
     @PutMapping("/update-club")
     public ResponseEntity<ClubResponseDTO> updateClub(@RequestBody ClubRequestDTO clubRequestDTO) {
         if (getCurrentUser().getRole() != Role.CLUB_OWNER)
-            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+            throw new RolePrivilegesException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
                     "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
         Club club = clubService.update(clubRequestDTO, getCurrentUser());
@@ -81,7 +83,7 @@ public class ClubController {
     @GetMapping("/my-club/players")
     public ResponseEntity<List<UserResponseDTO>> players() {
         if (getCurrentUser().getRole() != Role.CLUB_OWNER)
-            throw new RuntimeException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+            throw new RolePrivilegesException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
                     "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
         List<User> players = clubService.findPlayersWithReservationsInClub(getCurrentUser());
@@ -93,7 +95,7 @@ public class ClubController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.getName().equals("anonymousUser")) {
-            throw new RuntimeException("No user authenticated");
+            throw new UnauthenticatedException("No user authenticated");
         }
 
         return (User) authentication.getPrincipal();
