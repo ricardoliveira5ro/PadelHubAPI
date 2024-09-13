@@ -4,8 +4,10 @@ import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationStatusRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.exception.NotFoundException;
 import com.ricardo.oliveira.padelHubAPI.model.*;
+import com.ricardo.oliveira.padelHubAPI.repository.CourtRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.ReservationRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
+import com.ricardo.oliveira.padelHubAPI.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +22,16 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
+    private final CourtRepository courtRepository;
     private final CourtService courtService;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @Autowired
-    public ReservationServiceImpl(ReservationRepository reservationRepository, UserRepository userRepository, CourtService courtService) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository, UserRepository userRepository, CourtRepository courtRepository, CourtService courtService) {
         this.reservationRepository = reservationRepository;
         this.userRepository = userRepository;
+        this.courtRepository = courtRepository;
         this.courtService = courtService;
     }
 
@@ -62,8 +66,8 @@ public class ReservationServiceImpl implements ReservationService {
         Court court = courtService.findById(Integer.parseInt(reservationRequestDTO.getCourtId()));
 
         Reservation reservation = new Reservation(
-            LocalDateTime.parse(reservationRequestDTO.getReservationStartTime(), formatter),
-            LocalDateTime.parse(reservationRequestDTO.getReservationEndTime(), formatter),
+            Utils.formatDateTime(reservationRequestDTO.getReservationStartTime()),
+            Utils.formatDateTime(reservationRequestDTO.getReservationEndTime()),
             ReservationStatus.PENDING
         );
 
@@ -71,6 +75,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setUser(player);
 
         player.addReservation(reservation);
+        userRepository.save(player);
 
         return reservationRepository.findByUser_Id(court.getId()).getLast();
     }
