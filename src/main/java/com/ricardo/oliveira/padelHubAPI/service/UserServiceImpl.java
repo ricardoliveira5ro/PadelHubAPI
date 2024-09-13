@@ -1,19 +1,21 @@
 package com.ricardo.oliveira.padelHubAPI.service;
 
-import com.ricardo.oliveira.padelHubAPI.dto.request.ClubRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.LoginRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.SignupRequestDTO;
-import com.ricardo.oliveira.padelHubAPI.exception.InvalidRequestBodyException;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.repository.ClubRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
+import com.ricardo.oliveira.padelHubAPI.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import static com.ricardo.oliveira.padelHubAPI.utils.Utils.validateLoginUserDTO;
+import static com.ricardo.oliveira.padelHubAPI.utils.Utils.validateSignupUserDTO;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User signup(SignupRequestDTO signupRequestDTO) {
-        validateSignupUserDTO(signupRequestDTO);
+        Utils.validateSignupUserDTO(userRepository, clubRepository, signupRequestDTO);
 
         User user = new User(
                 signupRequestDTO.getFirstName(),
@@ -65,45 +67,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User authenticate(LoginRequestDTO loginRequestDTO) {
-        validateLoginUserDTO(loginRequestDTO);
+        Utils.validateLoginUserDTO(loginRequestDTO);
 
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword())
         );
 
         return userRepository.findByContactEmail(loginRequestDTO.getEmail()).orElseThrow();
-    }
-
-    private void validateSignupUserDTO(SignupRequestDTO signupRequestDTO) {
-        validateField(signupRequestDTO.getFirstName(), "firstName");
-        validateField(signupRequestDTO.getLastName(), "lastName");
-        validateField(signupRequestDTO.getEmail(), "email");
-        validateField(signupRequestDTO.getPassword(), "password");
-        validateField(signupRequestDTO.getRole(), "role");
-
-        if (userRepository.findByContactEmail(signupRequestDTO.getEmail()).orElse(null) != null)
-            throw new InvalidRequestBodyException("email already exists");
-
-        if (signupRequestDTO.getClub() != null)
-            validateClubDTO(signupRequestDTO.getClub());
-    }
-
-    private void validateLoginUserDTO(LoginRequestDTO loginRequestDTO) {
-        validateField(loginRequestDTO.getEmail(), "email");
-        validateField(loginRequestDTO.getPassword(), "password");
-    }
-
-    private void validateField(String value, String fieldName) {
-        if (value == null || value.isBlank()) {
-            throw new InvalidRequestBodyException("'" + fieldName + "' cannot be null or blank");
-        }
-    }
-
-    private void validateClubDTO(ClubRequestDTO clubRequestDTO) {
-        if (clubRepository.findByContactEmail(clubRequestDTO.getContactEmail()).orElse(null) != null)
-            throw new InvalidRequestBodyException("club email already exists");
-
-        if (clubRepository.findByContactPhone(clubRequestDTO.getContactPhone()).orElse(null) != null)
-            throw new InvalidRequestBodyException("club phone already exists");
     }
 }
