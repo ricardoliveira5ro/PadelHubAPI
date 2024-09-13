@@ -30,12 +30,12 @@ public class Reservation {
     @NotNull
     private ReservationStatus status;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     @NotNull
     private User user;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @ManyToOne()
     @JoinColumn(name = "court_id")
     @NotNull
     private Court court;
