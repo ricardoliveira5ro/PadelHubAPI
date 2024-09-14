@@ -10,6 +10,7 @@ import com.ricardo.oliveira.padelHubAPI.model.Reservation;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.service.ReservationService;
+import com.ricardo.oliveira.padelHubAPI.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,52 +33,42 @@ public class ReservationController {
 
     @GetMapping("/club-reservations")
     public ResponseEntity<List<ReservationResponseDTO>> clubReservations() {
-        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
-            throw new RolePrivilegesException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+        if (Utils.getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RolePrivilegesException("You are authenticated as a " + Utils.getCurrentUser().getRole() + " user. " +
                     "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
-        if (getCurrentUser().getClub() == null)
+        if (Utils.getCurrentUser().getClub() == null)
             throw new NotFoundException("Club not found, assign a new Club first");
 
-        return ResponseEntity.ok(new ArrayList<>(reservationService.findAllByClub(getCurrentUser()).stream().map(ReservationResponseDTO::new).toList()));
+        return ResponseEntity.ok(new ArrayList<>(reservationService.findAllByClub(Utils.getCurrentUser()).stream().map(ReservationResponseDTO::new).toList()));
     }
 
     @GetMapping("/club-reservations/{reservation_id}")
     public ResponseEntity<ReservationResponseDTO> clubReservation(@PathVariable int reservation_id) {
-        if (getCurrentUser().getRole() != Role.CLUB_OWNER)
-            throw new RolePrivilegesException("You are authenticated as a " + getCurrentUser().getRole() + " user. " +
+        if (Utils.getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RolePrivilegesException("You are authenticated as a " + Utils.getCurrentUser().getRole() + " user. " +
                     "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
-        if (getCurrentUser().getClub() == null)
+        if (Utils.getCurrentUser().getClub() == null)
             throw new NotFoundException("Club not found, assign a new Club first");
 
-        return ResponseEntity.ok(new ReservationResponseDTO(reservationService.findByIdByClub(getCurrentUser(), reservation_id)));
+        return ResponseEntity.ok(new ReservationResponseDTO(reservationService.findByIdByClub(Utils.getCurrentUser(), reservation_id)));
     }
 
     @GetMapping("/my-games")
     public ResponseEntity<List<ReservationResponseDTO>> myGames() {
-        return ResponseEntity.ok(new ArrayList<>(reservationService.findAllGames(getCurrentUser()).stream().map(ReservationResponseDTO::new).toList()));
+        return ResponseEntity.ok(new ArrayList<>(reservationService.findAllGames(Utils.getCurrentUser()).stream().map(ReservationResponseDTO::new).toList()));
     }
 
     @PostMapping("/add-game")
     public ResponseEntity<ReservationResponseDTO> addGame(@RequestBody ReservationRequestDTO reservationRequestDTO) {
-        Reservation reservation = reservationService.save(getCurrentUser(), reservationRequestDTO);
+        Reservation reservation = reservationService.save(Utils.getCurrentUser(), reservationRequestDTO);
 
         return ResponseEntity.ok(new ReservationResponseDTO(reservation));
     }
 
     @PostMapping("/{reservation_id}/change-status")
     public ResponseEntity<ReservationResponseDTO> changeStatus(@PathVariable int reservation_id, @RequestBody ReservationStatusRequestDTO reservationStatusRequestDTO) {
-        return ResponseEntity.ok(new ReservationResponseDTO(reservationService.changeStatus(getCurrentUser(), reservation_id, reservationStatusRequestDTO)));
-    }
-
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication.getName().equals("anonymousUser")) {
-            throw new UnauthenticatedException("No user authenticated");
-        }
-
-        return (User) authentication.getPrincipal();
+        return ResponseEntity.ok(new ReservationResponseDTO(reservationService.changeStatus(Utils.getCurrentUser(), reservation_id, reservationStatusRequestDTO)));
     }
 }

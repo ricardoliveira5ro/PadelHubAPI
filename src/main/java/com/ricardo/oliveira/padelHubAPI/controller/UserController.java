@@ -10,6 +10,7 @@ import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.service.JwtService;
 import com.ricardo.oliveira.padelHubAPI.service.UserService;
+import com.ricardo.oliveira.padelHubAPI.utils.Utils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class UserController {
 
     @GetMapping("/current-user")
     public ResponseEntity<UserResponseDTO> authenticatedUser() {
-        return ResponseEntity.ok(new UserResponseDTO(getCurrentUser()));
+        return ResponseEntity.ok(new UserResponseDTO(Utils.getCurrentUser()));
     }
 
     @PostMapping("/signup")
@@ -53,15 +54,5 @@ public class UserController {
         String token = jwtService.generateToken(user);
 
         return ResponseEntity.ok(new LoginResponseDTO(user.getUsername(), token, jwtService.getExpirationTime()));
-    }
-
-    private User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication.getName().equals("anonymousUser")) {
-            throw new UnauthenticatedException("No user authenticated");
-        }
-
-        return (User) authentication.getPrincipal();
     }
 }
