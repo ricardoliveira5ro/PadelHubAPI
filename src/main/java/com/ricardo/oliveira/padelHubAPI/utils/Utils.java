@@ -4,8 +4,12 @@ import com.ricardo.oliveira.padelHubAPI.dto.request.ClubRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.LoginRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.SignupRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.exception.InvalidRequestBodyException;
+import com.ricardo.oliveira.padelHubAPI.exception.UnauthenticatedException;
+import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.repository.ClubRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +17,16 @@ import java.time.format.DateTimeFormatter;
 public final class Utils {
 
     private Utils() {}
+
+    public static User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getName().equals("anonymousUser")) {
+            throw new UnauthenticatedException("No user authenticated");
+        }
+
+        return (User) authentication.getPrincipal();
+    }
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
