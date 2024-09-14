@@ -63,6 +63,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation save(User player, ReservationRequestDTO reservationRequestDTO) {
+        Utils.validateReservationDTO(reservationRequestDTO);
+
         Court court = courtService.findById(Integer.parseInt(reservationRequestDTO.getCourtId()));
 
         Reservation reservation = new Reservation(

@@ -8,6 +8,7 @@ import com.ricardo.oliveira.padelHubAPI.model.Court;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.repository.ClubRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
+import com.ricardo.oliveira.padelHubAPI.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -52,6 +53,8 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public Club save(ClubRequestDTO clubRequestDTO, User clubOwner) {
+        Utils.validateClubDTO(clubRepository, clubRequestDTO);
+
         Club club = new Club(
             clubRequestDTO.getName(),
             clubRequestDTO.getDescription(),
@@ -80,7 +83,7 @@ public class ClubServiceImpl implements ClubService {
     public Club update(ClubRequestDTO clubRequestDTO, User clubOwner) {
         Club club = findById(clubOwner.getClub().getId());
 
-        BeanUtils.copyProperties(clubRequestDTO, club, getNullPropertyNames(clubRequestDTO));
+        BeanUtils.copyProperties(clubRequestDTO, club, Utils.getNullPropertyNames(clubRequestDTO));
 
         return clubRepository.save(club);
     }
@@ -93,18 +96,5 @@ public class ClubServiceImpl implements ClubService {
             return players;
 
         return clubRepository.findPlayersWithReservationsInClub(clubOwner.getClub().getId());
-    }
-
-    private String[] getNullPropertyNames(Object source) {
-        final BeanWrapper src = new BeanWrapperImpl(source);
-        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-        Set<String> emptyNames = new HashSet<>();
-        for (PropertyDescriptor pd : pds) {
-            Object srcValue = src.getPropertyValue(pd.getName());
-            if (srcValue == null) emptyNames.add(pd.getName());
-        }
-        String[] result = new String[emptyNames.size()];
-        return emptyNames.toArray(result);
     }
 }
