@@ -7,6 +7,7 @@ import com.ricardo.oliveira.padelHubAPI.model.Court;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.repository.CourtRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
+import com.ricardo.oliveira.padelHubAPI.utils.Utils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -65,6 +66,8 @@ public class CourtServiceImpl implements CourtService {
 
     @Override
     public Court save(CourtRequestDTO courtRequestDTO, User clubOwner) {
+        Utils.validateCourtDTO(courtRequestDTO);
+
         Club club = clubService.findById(clubOwner.getClub().getId());
 
         Court court = new Court(
@@ -85,21 +88,8 @@ public class CourtServiceImpl implements CourtService {
     public Court update(Integer courtId, CourtRequestDTO courtRequestDTO) {
         Court court = findById(courtId);
 
-        BeanUtils.copyProperties(courtRequestDTO, court, getNullPropertyNames(courtRequestDTO));
+        BeanUtils.copyProperties(courtRequestDTO, court, Utils.getNullPropertyNames(courtRequestDTO));
 
         return courtRepository.save(court);
-    }
-
-    private String[] getNullPropertyNames(Object source) {
-        final BeanWrapper src = new BeanWrapperImpl(source);
-        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-        Set<String> emptyNames = new HashSet<>();
-        for (PropertyDescriptor pd : pds) {
-            Object srcValue = src.getPropertyValue(pd.getName());
-            if (srcValue == null) emptyNames.add(pd.getName());
-        }
-        String[] result = new String[emptyNames.size()];
-        return emptyNames.toArray(result);
     }
 }
