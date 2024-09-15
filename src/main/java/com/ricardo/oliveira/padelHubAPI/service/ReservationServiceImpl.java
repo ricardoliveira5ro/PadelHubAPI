@@ -77,9 +77,8 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setUser(player);
 
         player.addReservation(reservation);
-        userRepository.save(player);
 
-        return reservationRepository.findByUser_Id(court.getId()).getLast();
+        return reservationRepository.save(reservation);
     }
 
     @Override
