@@ -100,6 +100,19 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.save(reservation);
     }
 
+    @Override
+    public void delete(Integer reservationId) {
+        Reservation reservation = findById(reservationId);
+
+        User player = userRepository.findById(reservation.getUser().getId()).orElseThrow();
+        Court court = courtRepository.findById(reservation.getCourt().getId()).orElseThrow();
+
+        player.removeReservation(reservation);
+        court.removeReservation(reservation);
+
+        reservationRepository.deleteById(reservationId);
+    }
+
     private Reservation findById(Integer reservationId) {
         Optional<Reservation> result = reservationRepository.findById(reservationId);
 

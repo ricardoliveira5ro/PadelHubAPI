@@ -68,6 +68,10 @@ public class Court {
         reservation.setCourt(this);
     }
 
+    public void removeReservation(Reservation reservation) {
+        reservations.removeIf(r -> r.getId() == reservation.getId());
+    }
+
     public int getId() {
         return id;
     }
