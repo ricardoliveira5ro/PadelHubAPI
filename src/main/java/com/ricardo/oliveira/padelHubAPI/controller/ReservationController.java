@@ -71,4 +71,11 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDTO> changeStatus(@PathVariable int reservation_id, @RequestBody ReservationStatusRequestDTO reservationStatusRequestDTO) {
         return ResponseEntity.ok(new ReservationResponseDTO(reservationService.changeStatus(Utils.getCurrentUser(), reservation_id, reservationStatusRequestDTO)));
     }
+
+    @DeleteMapping("/{reservation_id}")
+    public ResponseEntity<String> deleteReservation(@PathVariable int reservation_id) {
+        reservationService.delete(Utils.getCurrentUser(), reservation_id);
+
+        return ResponseEntity.ok("Reservation deleted successfully");
+    }
 }

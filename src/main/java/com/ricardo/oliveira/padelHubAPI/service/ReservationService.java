@@ -19,4 +19,6 @@ public interface ReservationService {
     Reservation save(User player, ReservationRequestDTO reservationRequestDTO);
 
     Reservation changeStatus(User user, Integer reservationId, ReservationStatusRequestDTO reservationStatusRequestDTO);
+
+    void delete(User user, Integer reservationId);
 }

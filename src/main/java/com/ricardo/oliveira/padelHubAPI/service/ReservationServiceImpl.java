@@ -100,6 +100,28 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.save(reservation);
     }
 
+    @Override
+    public void delete(User user, Integer reservationId) {
+        Reservation reservation;
+
+        if (user.getRole() == Role.CLUB_OWNER) {
+            reservation = findByIdByClub(user, reservationId);
+
+        } else {
+            reservation = findById(reservationId);
+
+            if (user.getRole() == Role.PLAYER && reservation.getUser().getId() != user.getId())
+                throw new NotFoundException("Did not find reservation id - " + reservationId);
+        }
+
+        Court court = courtRepository.findById(reservation.getCourt().getId()).orElseThrow();
+
+        user.removeReservation(reservation);
+        court.removeReservation(reservation);
+
+        reservationRepository.deleteById(reservationId);
+    }
+
     private Reservation findById(Integer reservationId) {
         Optional<Reservation> result = reservationRepository.findById(reservationId);
 

@@ -66,12 +66,23 @@ public class CourtController {
         return ResponseEntity.ok(new CourtResponseDTO(court));
     }
 
-    @PutMapping("update-court/{court_id}")
+    @PutMapping("/update-court/{court_id}")
     public ResponseEntity<CourtResponseDTO> updateCourt(@PathVariable int court_id, @RequestBody CourtRequestDTO courtRequestDTO) {
         if (Utils.getCurrentUser().getRole() != Role.CLUB_OWNER)
             throw new RolePrivilegesException("You are authenticated as a " + Utils.getCurrentUser().getRole() + " user. " +
                     "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
 
         return ResponseEntity.ok(new CourtResponseDTO(courtService.update(court_id, courtRequestDTO)));
+    }
+
+    @DeleteMapping("/{court_id}")
+    public ResponseEntity<String> deleteCourt(@PathVariable int court_id) {
+        if (Utils.getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RolePrivilegesException("You are authenticated as a " + Utils.getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
+
+        courtService.delete(Utils.getCurrentUser(), court_id);
+
+        return ResponseEntity.ok("Court deleted successfully");
     }
 }

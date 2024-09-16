@@ -85,6 +85,10 @@ public class User implements UserDetails {
         reservation.setUser(this);
     }
 
+    public void removeReservation(Reservation reservation) {
+        reservations.removeIf(r -> r.getId() == reservation.getId());
+    }
+
     public int getId() {
         return id;
     }
