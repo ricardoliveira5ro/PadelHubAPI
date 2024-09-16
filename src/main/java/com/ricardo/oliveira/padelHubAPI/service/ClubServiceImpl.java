@@ -5,8 +5,10 @@ import com.ricardo.oliveira.padelHubAPI.dto.request.CourtRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.exception.NotFoundException;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
+import com.ricardo.oliveira.padelHubAPI.model.Reservation;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.repository.ClubRepository;
+import com.ricardo.oliveira.padelHubAPI.repository.ReservationRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
 import com.ricardo.oliveira.padelHubAPI.utils.Utils;
 import org.springframework.beans.BeanUtils;
@@ -23,11 +25,13 @@ public class ClubServiceImpl implements ClubService {
 
     private final ClubRepository clubRepository;
     private final UserRepository userRepository;
+    private final ReservationRepository reservationRepository;
 
     @Autowired
-    public ClubServiceImpl(ClubRepository clubRepository, UserRepository userRepository) {
+    public ClubServiceImpl(ClubRepository clubRepository, UserRepository userRepository, ReservationRepository reservationRepository) {
         this.clubRepository = clubRepository;
         this.userRepository = userRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     @Override
@@ -96,5 +100,27 @@ public class ClubServiceImpl implements ClubService {
             return players;
 
         return clubRepository.findPlayersWithReservationsInClub(clubOwner.getClub().getId());
+    }
+
+    @Override
+    public void delete(User clubOwner) {
+        Club club = clubOwner.getClub();
+
+        if (clubOwner.getClub() == null)
+            throw new NotFoundException("No club found");
+
+        club.getCourts().forEach(court -> {
+            if (court.getReservations() != null && !court.getReservations().isEmpty()) {
+                for (Reservation reservation : court.getReservations()) {
+                    reservationRepository.deleteById(reservation.getId());
+                    clubOwner.removeReservation(reservation);
+                }
+            }
+        });
+
+        clubOwner.setClub(null);
+        userRepository.save(clubOwner);
+
+        clubRepository.deleteById(club.getId());
     }
 }

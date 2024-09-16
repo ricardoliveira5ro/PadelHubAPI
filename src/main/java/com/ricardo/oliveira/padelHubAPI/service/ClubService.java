@@ -17,4 +17,6 @@ public interface ClubService {
     Club update(ClubRequestDTO clubRequestDTO, User clubOwner);
 
     List<User> findPlayersWithReservationsInClub(User clubOwner);
+
+    void delete(User clubOwner);
 }

@@ -87,4 +87,15 @@ public class ClubController {
 
         return ResponseEntity.ok(new ArrayList<>(players.stream().map(UserResponseDTO::new).toList()));
     }
+
+    @DeleteMapping("/delete-club")
+    public ResponseEntity<String> deleteClub() {
+        if (Utils.getCurrentUser().getRole() != Role.CLUB_OWNER)
+            throw new RolePrivilegesException("You are authenticated as a " + Utils.getCurrentUser().getRole() + " user. " +
+                    "Must be a " + Role.CLUB_OWNER.getValue() + " user to perform this action");
+
+        clubService.delete(Utils.getCurrentUser());
+
+        return ResponseEntity.ok("Club deleted successfully");
+    }
 }
