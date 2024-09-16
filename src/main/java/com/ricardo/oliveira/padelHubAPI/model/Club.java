@@ -41,7 +41,8 @@ public class Club {
     @OneToMany(
         mappedBy = "club",
         fetch = FetchType.EAGER,
-        cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE }
+        cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE },
+        orphanRemoval = true
     )
     private List<Court> courts;
 
@@ -70,6 +71,10 @@ public class Club {
         courts.add(court);
 
         court.setClub(this);
+    }
+
+    public void removeCourt(Court court) {
+        courts.removeIf(r -> r.getId() == court.getId());
     }
 
     public int getId() {

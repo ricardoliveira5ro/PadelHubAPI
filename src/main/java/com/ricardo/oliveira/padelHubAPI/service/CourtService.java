@@ -16,4 +16,6 @@ public interface CourtService {
     Court save(CourtRequestDTO courtRequestDTO, User clubOwner);
 
     Court update(Integer courtId, CourtRequestDTO courtRequestDTO);
+
+    void delete(User clubOwner, Integer courtId);
 }

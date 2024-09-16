@@ -39,7 +39,8 @@ public class Court {
     @OneToMany(
         mappedBy = "court",
         fetch = FetchType.EAGER,
-        cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH }
+        cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE },
+        orphanRemoval = true
     )
     private List<Reservation> reservations;
 

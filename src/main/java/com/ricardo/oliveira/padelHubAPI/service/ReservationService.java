@@ -20,5 +20,5 @@ public interface ReservationService {
 
     Reservation changeStatus(User user, Integer reservationId, ReservationStatusRequestDTO reservationStatusRequestDTO);
 
-    void delete(Integer reservationId);
+    void delete(User user, Integer reservationId);
 }

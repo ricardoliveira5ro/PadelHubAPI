@@ -4,17 +4,16 @@ import com.ricardo.oliveira.padelHubAPI.dto.request.CourtRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.exception.NotFoundException;
 import com.ricardo.oliveira.padelHubAPI.model.Club;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
+import com.ricardo.oliveira.padelHubAPI.model.Reservation;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.repository.CourtRepository;
+import com.ricardo.oliveira.padelHubAPI.repository.ReservationRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
 import com.ricardo.oliveira.padelHubAPI.utils.Utils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.beans.PropertyDescriptor;
 import java.util.*;
 
 @Service
@@ -23,12 +22,14 @@ public class CourtServiceImpl implements CourtService {
     private final CourtRepository courtRepository;
     private final UserRepository userRepository;
     private final ClubService clubService;
+    private final ReservationRepository reservationRepository;
 
     @Autowired
-    public CourtServiceImpl(CourtRepository courtRepository, UserRepository userRepository, ClubService clubService) {
+    public CourtServiceImpl(CourtRepository courtRepository, UserRepository userRepository, ClubService clubService, ReservationRepository reservationRepository) {
         this.courtRepository = courtRepository;
         this.userRepository = userRepository;
         this.clubService = clubService;
+        this.reservationRepository = reservationRepository;
     }
 
     @Override
@@ -91,5 +92,30 @@ public class CourtServiceImpl implements CourtService {
         BeanUtils.copyProperties(courtRequestDTO, court, Utils.getNullPropertyNames(courtRequestDTO));
 
         return courtRepository.save(court);
+    }
+
+    @Override
+    public void delete(User clubOwner, Integer courtId) {
+        if (clubOwner.getClub() == null)
+            throw new NotFoundException("No club and courts available");
+
+        Club club = clubOwner.getClub();
+        Court court = club.getCourts().stream()
+                .filter(c -> c.getId() == courtId)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Did not find court id - " + courtId));
+
+        if (court.getReservations() != null && !court.getReservations().isEmpty()) {
+            for (Reservation reservation : court.getReservations()) {
+                reservationRepository.deleteById(reservation.getId());
+                clubOwner.removeReservation(reservation);
+            }
+        }
+
+        club.removeCourt(court);
+
+        userRepository.save(clubOwner);
+
+        courtRepository.deleteById(courtId);
     }
 }

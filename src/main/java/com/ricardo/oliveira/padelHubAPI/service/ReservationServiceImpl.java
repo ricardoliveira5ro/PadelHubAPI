@@ -101,13 +101,22 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void delete(Integer reservationId) {
-        Reservation reservation = findById(reservationId);
+    public void delete(User user, Integer reservationId) {
+        Reservation reservation;
 
-        User player = userRepository.findById(reservation.getUser().getId()).orElseThrow();
+        if (user.getRole() == Role.CLUB_OWNER) {
+            reservation = findByIdByClub(user, reservationId);
+
+        } else {
+            reservation = findById(reservationId);
+
+            if (user.getRole() == Role.PLAYER && reservation.getUser().getId() != user.getId())
+                throw new NotFoundException("Did not find reservation id - " + reservationId);
+        }
+
         Court court = courtRepository.findById(reservation.getCourt().getId()).orElseThrow();
 
-        player.removeReservation(reservation);
+        user.removeReservation(reservation);
         court.removeReservation(reservation);
 
         reservationRepository.deleteById(reservationId);

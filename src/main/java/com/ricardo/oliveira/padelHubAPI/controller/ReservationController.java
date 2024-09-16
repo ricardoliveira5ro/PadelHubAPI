@@ -74,7 +74,7 @@ public class ReservationController {
 
     @DeleteMapping("/{reservation_id}")
     public ResponseEntity<String> deleteReservation(@PathVariable int reservation_id) {
-        reservationService.delete(reservation_id);
+        reservationService.delete(Utils.getCurrentUser(), reservation_id);
 
         return ResponseEntity.ok("Reservation deleted successfully");
     }
