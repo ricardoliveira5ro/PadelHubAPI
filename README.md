@@ -3,7 +3,7 @@
 PadelHub API is a RESTful API designed to manage padel club activities such as user registration, login, and reservations. This API allows padel clubs to streamline operations by handling users, clubs, and reservation management.
 The application implements JWT-based authentication and role-based authorization, ensuring secure access to resources.
 
-`padelhubapi.azurewebsites.net/` hosts a public instance of the API.
+`padelhubapi.azurewebsites.net` hosts a public instance of the API.
 <br/>
 
 ## 🚀 Getting Started
