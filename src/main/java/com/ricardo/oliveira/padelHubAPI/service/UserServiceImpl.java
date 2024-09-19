@@ -14,9 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static com.ricardo.oliveira.padelHubAPI.utils.Utils.validateLoginUserDTO;
-import static com.ricardo.oliveira.padelHubAPI.utils.Utils.validateSignupUserDTO;
-
 @Service
 public class UserServiceImpl implements UserService {
 

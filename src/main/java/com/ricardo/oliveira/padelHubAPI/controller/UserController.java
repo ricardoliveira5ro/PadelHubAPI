@@ -5,7 +5,6 @@ import com.ricardo.oliveira.padelHubAPI.dto.request.SignupRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.LoginResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.UserResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.exception.RolePrivilegesException;
-import com.ricardo.oliveira.padelHubAPI.exception.UnauthenticatedException;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.service.JwtService;
@@ -14,8 +13,6 @@ import com.ricardo.oliveira.padelHubAPI.utils.Utils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

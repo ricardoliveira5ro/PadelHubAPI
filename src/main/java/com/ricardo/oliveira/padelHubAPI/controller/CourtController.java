@@ -5,16 +5,12 @@ import com.ricardo.oliveira.padelHubAPI.dto.response.CourtResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.response.CourtShortResponseDTO;
 import com.ricardo.oliveira.padelHubAPI.exception.NotFoundException;
 import com.ricardo.oliveira.padelHubAPI.exception.RolePrivilegesException;
-import com.ricardo.oliveira.padelHubAPI.exception.UnauthenticatedException;
 import com.ricardo.oliveira.padelHubAPI.model.Court;
 import com.ricardo.oliveira.padelHubAPI.model.Role;
-import com.ricardo.oliveira.padelHubAPI.model.User;
 import com.ricardo.oliveira.padelHubAPI.service.CourtService;
 import com.ricardo.oliveira.padelHubAPI.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
