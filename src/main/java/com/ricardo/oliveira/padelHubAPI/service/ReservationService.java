@@ -2,7 +2,6 @@ package com.ricardo.oliveira.padelHubAPI.service;
 
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationRequestDTO;
 import com.ricardo.oliveira.padelHubAPI.dto.request.ReservationStatusRequestDTO;
-import com.ricardo.oliveira.padelHubAPI.model.Court;
 import com.ricardo.oliveira.padelHubAPI.model.Reservation;
 import com.ricardo.oliveira.padelHubAPI.model.User;
 

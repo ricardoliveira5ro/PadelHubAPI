@@ -6,13 +6,10 @@ import com.ricardo.oliveira.padelHubAPI.exception.NotFoundException;
 import com.ricardo.oliveira.padelHubAPI.model.*;
 import com.ricardo.oliveira.padelHubAPI.repository.CourtRepository;
 import com.ricardo.oliveira.padelHubAPI.repository.ReservationRepository;
-import com.ricardo.oliveira.padelHubAPI.repository.UserRepository;
 import com.ricardo.oliveira.padelHubAPI.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,16 +18,12 @@ import java.util.Optional;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
     private final CourtRepository courtRepository;
     private final CourtService courtService;
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-
     @Autowired
-    public ReservationServiceImpl(ReservationRepository reservationRepository, UserRepository userRepository, CourtRepository courtRepository, CourtService courtService) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository, CourtRepository courtRepository, CourtService courtService) {
         this.reservationRepository = reservationRepository;
-        this.userRepository = userRepository;
         this.courtRepository = courtRepository;
         this.courtService = courtService;
     }

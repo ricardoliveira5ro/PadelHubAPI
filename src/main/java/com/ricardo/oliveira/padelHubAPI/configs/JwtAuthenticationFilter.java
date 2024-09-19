@@ -1,5 +1,6 @@
 package com.ricardo.oliveira.padelHubAPI.configs;
 
+import com.ricardo.oliveira.padelHubAPI.exception.UnauthenticatedException;
 import com.ricardo.oliveira.padelHubAPI.service.JwtService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -42,15 +43,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
+    ) {
         try {
+            final String authHeader = request.getHeader("Authorization");
+
+            if (authHeader == null || !authHeader.startsWith("Bearer "))
+                throw new UnauthenticatedException("Authentication token is missing or invalid");
+
             final String jwt = authHeader.substring(7);
             final String userEmail = jwtService.extractUsername(jwt);
 
