@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.NonNull;
@@ -17,8 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-
-import java.io.IOException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -47,8 +44,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             final String authHeader = request.getHeader("Authorization");
 
-            if (authHeader == null || !authHeader.startsWith("Bearer "))
-                throw new UnauthenticatedException("Authentication token is missing or invalid");
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                if (!request.getRequestURI().equals("/users/login") && !request.getRequestURI().equals("/users/signup")) {
+                    throw new UnauthenticatedException("Authentication token is missing or invalid");
+                }
+
+                filterChain.doFilter(request, response);
+                return;
+            }
 
             final String jwt = authHeader.substring(7);
             final String userEmail = jwtService.extractUsername(jwt);
